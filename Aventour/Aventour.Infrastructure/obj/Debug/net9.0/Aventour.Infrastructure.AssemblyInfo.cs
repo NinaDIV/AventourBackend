@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aventour.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c14b77e58bd9b18a301780f34e6723b7196489d2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c69ffc7c125643fe25e3bb8d1a89723c79bdb38")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aventour.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aventour.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "304QFgk17NM=",
+  "dgSpecHash": "JZdQYbkVtQc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.WebAPI\\Aventour.WebAPI.csproj",
+  "projectFilePath": "C:\\Users\\Ogro\\Documents\\.NET\\dd\\AventourBackend\\Aventour\\Aventour.WebAPI\\Aventour.WebAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ogro\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.9\\microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
     "C:\\Users\\Ogro\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"

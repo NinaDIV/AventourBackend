@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj": {}
+    "C:\\Users\\Ogro\\Documents\\.NET\\dd\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj": {
+    "C:\\Users\\Ogro\\Documents\\.NET\\dd\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Ogro\\Documents\\.NET\\dd\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj",
         "projectName": "Aventour.Application",
-        "projectPath": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj",
+        "projectPath": "C:\\Users\\Ogro\\Documents\\.NET\\dd\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj",
         "packagesPath": "C:\\Users\\Ogro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Application\\obj\\",
+        "outputPath": "C:\\Users\\Ogro\\Documents\\.NET\\dd\\AventourBackend\\Aventour\\Aventour.Application\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Ogro\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -59,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
