@@ -1,41 +1,110 @@
+using System.Text;
+using Aventour.Application.Services;
+using Aventour.Domain.Interfaces;
+using Aventour.Infrastructure.Authentication;
+using Aventour.Infrastructure.Persistence.Context;
+using Aventour.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// =============================================================
+// 1. CONFIGURAR BASE DE DATOS (POSTGRES / SQLSERVER / OTRO)
+// =============================================================
+builder.Services.AddDbContext<AventourDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AventourConnection"))
+);
+
+
+// =============================================================
+// 2. SWAGGER + JWT SEGURIDAD
+// =============================================================
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo 
+    { 
+        Title = "Aventour API", 
+        Version = "v1" 
+    });
+
+    // Habilitar botón Authorize en Swagger
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme 
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http, 
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header, 
+        Description = "Ingresa tu token JWT aquí usando el formato: Bearer {token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme 
+            {
+                Reference = new OpenApiReference 
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+// =============================================================
+// 3. INYECCIÓN DE DEPENDENCIAS HEXAGONAL
+// =============================================================
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<JwtTokenGenerator>();
+
+// =============================================================
+// 4. AUTENTICACIÓN JWT (VALIDACIÓN DE TOKENS)
+// =============================================================
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+            )
+        };
+    });
+
+// Controllers
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// =============================================================
+// 5. MIDDLEWARES
+// =============================================================
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// **IMPORTANTE:** Primero autenticación, luego autorización
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
-
+app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
