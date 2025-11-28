@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aventour.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+479a568092a544fda9fe69fd7cd3ec13c47d724b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+95ca88778a55dc7eec405b975465524583e29a39")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aventour.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aventour.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
