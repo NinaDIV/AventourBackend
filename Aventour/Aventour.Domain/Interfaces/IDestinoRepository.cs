@@ -15,5 +15,8 @@ namespace Aventour.Domain.Interfaces
         Task<IEnumerable<DestinosTuristico>> BuscarPorNombreAsync(string nombre);
         // Opcional: Buscar destinos en un radio de KM (lógica simple)
         Task<IEnumerable<DestinosTuristico>> BuscarCercanosAsync(decimal latitud, decimal longitud, double radioKm);
+        Task<DestinosTuristico?> GetByIdAsync(int dtoIdEntidad);
+
+
     }
 }

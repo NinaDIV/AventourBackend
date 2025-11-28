@@ -5,8 +5,10 @@ namespace Aventour.Application.DTOs
 {
     public class FavoritoCreateDto
     {
-        // El IdUsuario se obtendrá del token o la sesión
-        public int IdEntidad { get; set; }
-        public TipoFavorito TipoEntidad { get; set; }
+        [Required]
+        public int IdEntidad { get; set; } // ID del Destino o Lugar
+
+        [Required]
+        public TipoFavorito TipoEntidad { get; set; } // 'Destino' o 'Lugar'
     }
 }

@@ -86,5 +86,14 @@ namespace Aventour.Infrastructure.Persistence.Repositories
             var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             return R * c;
         }
+        
+        public async Task<DestinosTuristico?> GetByIdAsync(int dtoIdEntidad)
+        {
+            // Usamos AsNoTracking porque es solo lectura
+            return await _context.DestinosTuristicos
+                .AsNoTracking()
+                .FirstOrDefaultAsync(d => d.IdDestino == dtoIdEntidad);
+        }
+
     }
 }

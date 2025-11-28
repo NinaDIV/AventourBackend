@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Aventour.Domain.Enums;
 using Aventour.Domain.Models;
+using Npgsql;
 
 namespace Aventour.Infrastructure.Persistence.Context;
 
@@ -36,7 +37,7 @@ public partial class AventourDbContext : DbContext
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
-
+ 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresEnum<TipoAgenciaGuia>("tipo_agencia_guia");
@@ -111,29 +112,30 @@ public partial class AventourDbContext : DbContext
         
         modelBuilder.Entity<Favorito>(entity =>
         {
-            // Define la clave primaria compuesta
-            entity.HasKey(e => new { e.IdUsuario, e.IdEntidad }).HasName("favoritos_pkey"); 
+            // CORRECCIÓN 1: La PK debe incluir el TipoEntidad
+            entity.HasKey(e => new { e.IdUsuario, e.IdEntidad, e.TipoEntidad })
+                .HasName("favoritos_pkey"); 
+        
             entity.ToTable("favoritos");
+
+            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+            entity.Property(e => e.IdEntidad).HasColumnName("id_entidad");
+        
+            entity.Property(e => e.TipoEntidad)
+                .HasColumnType("tipo_favorito")
+                .HasColumnName("tipo_entidad");
 
             entity.Property(e => e.FechaGuardado)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("fecha_guardado");
-                
-            entity.Property(e => e.IdEntidad).HasColumnName("id_entidad");
-            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
-            
-            // Mapeo del enum TipoFavorito a la columna tipo_entidad
-            entity.Property(e => e.TipoEntidad)
-                .HasColumnType("tipo_favorito") // Usa el tipo de enum de la BD
-                .HasColumnName("tipo_entidad");
-                  
+              
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany()
                 .HasForeignKey(d => d.IdUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("favoritos_id_usuario_fkey");
         });
-
+        
         modelBuilder.Entity<HotelesRestaurante>(entity =>
         {
             entity.HasKey(e => e.IdLugar).HasName("hoteles_restaurantes_pkey");

@@ -1,14 +1,12 @@
-// Aventour.Application.UseCases.Favoritos/IFavoritoService.cs
+// Aventour.Application/UseCases/Favorito/IFavoritoService.cs
 using Aventour.Application.DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Aventour.Domain.Enums; // Importante para el Enum
 
-namespace Aventour.Application.UseCases.Favoritos
+public interface IFavoritoService
 {
-    public interface IFavoritoService
-    {
-        Task<List<FavoritoDto>> GetFavoritosDelUsuarioAsync(int idUsuario);
-        Task<FavoritoDto> AddFavoritoAsync(int idUsuario, FavoritoCreateDto favoritoDto);
-        Task<bool> RemoveFavoritoAsync(int idUsuario, int idEntidad);
-    }
+    Task<List<FavoritoDto>> GetFavoritosDelUsuarioAsync(int idUsuario);
+    Task<FavoritoDto> AddFavoritoAsync(int idUsuario, FavoritoCreateDto favoritoDto);
+    
+    // CORRECCIÓN 4: El borrado necesita saber qué tipo de entidad borrar
+    Task<bool> RemoveFavoritoAsync(int idUsuario, int idEntidad, TipoFavorito tipo);
 }

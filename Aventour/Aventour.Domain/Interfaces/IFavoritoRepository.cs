@@ -1,17 +1,12 @@
-// Aventour.Domain.Interfaces/IFavoritoRepository.cs
+// Aventour.Domain/Interfaces/IFavoritoRepository.cs
 using Aventour.Domain.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Aventour.Domain.Enums; // Asegúrate de importar el Enum
 
-namespace Aventour.Domain.Interfaces
+public interface IFavoritoRepository
 {
-    public interface IFavoritoRepository
-    {
-        Task<Favorito?> GetFavoritoAsync(int idUsuario, int idEntidad);
-        Task<List<Favorito>> GetFavoritosByUsuarioAsync(int idUsuario);
-        Task AddFavoritoAsync(Favorito favorito);
-        Task DeleteFavoritoAsync(Favorito favorito);
-        // Opcional: Para el CRUD completo, pero no necesario para esta entidad de cruce
-        // Task UpdateFavoritoAsync(Favorito favorito); 
-    }
+    // CORRECCIÓN 2: Añadir el parámetro TipoFavorito para diferenciar Destino de Lugar
+    Task<List<Favorito>> GetFavoritosByUsuarioAsync(int idUsuario);
+    Task<Favorito?> GetFavoritoAsync(int idUsuario, int idEntidad, TipoFavorito tipo);
+    Task AddFavoritoAsync(Favorito favorito);
+    Task DeleteFavoritoAsync(Favorito favorito);
 }

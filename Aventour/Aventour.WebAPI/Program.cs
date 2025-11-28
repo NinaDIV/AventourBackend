@@ -1,32 +1,52 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Aventour.Application.DTOs;
-using Aventour.Application.Services;
+using Aventour.Application.Services; // UsuarioService
 using Aventour.Application.Services.Destinos;
+using Aventour.Application.Services.Favoritos;
 using Aventour.Application.UseCases.Destinos;
-using Aventour.Application.UseCases.Favoritos;
+ 
+using Aventour.Domain.Enums; // <--- Necesario para tus Enums
 using Aventour.Domain.Interfaces;
 using Aventour.Infrastructure.Authentication;
 using Aventour.Infrastructure.Persistence.Context;
 using Aventour.Infrastructure.Persistence.Repositories;
-using Aventour.Infrastructure.Persistence.UnitOfWork; // Asumo que IUnitOfWork está implementado aquí
+using Aventour.Infrastructure.Persistence.UnitOfWork;
+using Aventour.Infrastructure.Repositories;
+using Aventour.Infrastructure.Security; // JwtTokenGenerator
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Aventour.Application.UseCases.Favoritos; // Asegúrate de tener este using para la interfaz
-using Aventour.Application.Services.Favoritos;
-using Aventour.Infrastructure.Repositories; // Asumo que la implementación está aquí
+using Npgsql; // <--- Necesario para NpgsqlDataSourceBuilder
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ===============================================
-// 1. Agregar conexión a PostgreSQL usando appsettings.json
+// 1. BASE DE DATOS: Configuración Correcta con Enums
 // ===============================================
+
+// A. Obtener cadena de conexión
+var connectionString = builder.Configuration.GetConnectionString("AventourConnection");
+
+// B. Crear el DataSourceBuilder (Esta es la forma moderna de Npgsql)
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+
+// C. Mapear tus Enums AQUÍ. Deben coincidir exactamente con los nombres en Postgres.
+dataSourceBuilder.MapEnum<TipoFavorito>("tipo_favorito");
+dataSourceBuilder.MapEnum<TipoAgenciaGuia>("tipo_agencia_guia");
+dataSourceBuilder.MapEnum<TipoResena>("tipo_resena");
+dataSourceBuilder.MapEnum<TipoHotelRest>("tipo_hotel_rest");
+
+// D. Construir el DataSource
+var dataSource = dataSourceBuilder.Build();
+
+// E. Inyectar el DbContext usando el dataSource configurado
 builder.Services.AddDbContext<AventourDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("AventourConnection"))
+    options.UseNpgsql(dataSource)
 );
 
-// Necesario para PostgreSQL (fecha y enums)
+// (Opcional) Switch legacy para timestamps, aunque con el mapeo suele ser menos crítico
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // =============================================================
@@ -68,34 +88,26 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // =============================================================
-// 3. INYECCIÓN DE DEPENDENCIAS HEXAGONAL 🧱
+// 3. INYECCIÓN DE DEPENDENCIAS
 // =============================================================
 
-// Repositorios y Unidad de Trabajo (Infraestructura / Adaptadores de Salida)
-// Se elimina la línea duplicada IUnitOfWork.
-
-// 1. Repositorio (Infraestructura)
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Registro central de UoW
+// --- Repositorios ---
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IDestinoRepository, DestinoRepository>();
-builder.Services.AddScoped<IFavoritoRepository, FavoritoRepository>(); // Repositorio de Favoritos
+builder.Services.AddScoped<IFavoritoRepository, FavoritoRepository>();
 
-// Servicios / Casos de Uso (Aplicación / Dominio)
-// Servicios de Usuarios
-builder.Services.AddScoped<UsuarioService>(); // Si no tiene interfaz
+// --- Servicios / Casos de Uso ---
+builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 
-// Servicios de Destinos
+// Destinos
 builder.Services.AddScoped<IDestinoService, DestinoService>();
 builder.Services.AddScoped<IGestionarDestinosUseCase, GestionarDestinosUseCase>();
 builder.Services.AddScoped<IConsultarDestinosUseCase, ConsultarDestinosUseCase>();
 
-// Servicios de Favoritos (Tanto la interfaz como la implementación)
-// Registro de AutoMapper: Busca todos los perfiles (como FavoritoMappingProfile) en el ensamblado de Aventour.Application
-// Usamos el ensamblado de una clase conocida en la capa Application, como FavoritoDto.
+// Favoritos (AutoMapper + Servicio)
 builder.Services.AddAutoMapper(typeof(FavoritoDto).Assembly);
-
-// Registro de los Servicios/Casos de Uso
 builder.Services.AddScoped<IFavoritoService, FavoritoService>();
 
 // =============================================================
@@ -118,7 +130,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddControllers();
+// Configuración de Controladores y JSON
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Esto permite que envíes "Destino" (string) en el JSON en lugar de 0 o 1
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 var app = builder.Build();
 
