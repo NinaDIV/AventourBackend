@@ -1,10 +1,16 @@
-using Aventour.Domain.Entities;
 using Aventour.Domain.Interfaces;
+using Aventour.Domain.Entities;
+using Aventour.Domain.Enums;
 using Aventour.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Aventour.Application.Interfaces;
 
 namespace Aventour.Infrastructure.Persistence.Repositories
 {
+    // ADAPTADOR: Implementa el Puerto IFavoritoRepository
     public class FavoritoRepository : IFavoritoRepository
     {
         private readonly AventourDbContext _context;
@@ -14,37 +20,44 @@ namespace Aventour.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<dynamic>> ListarFavoritosPorUsuario(int idUsuario)
-        {
-            // Hacemos un JOIN explícito ya que no hay propiedad de navegación en la entidad Favorito hacia Destino
-            var query = from fav in _context.Favoritos
-                join dest in _context.DestinosTuristicos on fav.IdEntidad equals dest.IdDestino
-                where fav.IdUsuario == idUsuario
-                select new { Favorito = fav, Destino = dest };
-
-            return await query.ToListAsync();
-        }
-
-        public async Task<bool> ExisteFavorito(int idUsuario, int idDestino)
-        {
-            return await _context.Favoritos
-                .AnyAsync(f => f.IdUsuario == idUsuario && f.IdEntidad == idDestino);
-        }
-
-        public async Task AgregarFavorito(Favorito favorito)
+        public async Task<Favorito> AddAsync(Favorito favorito)
         {
             await _context.Favoritos.AddAsync(favorito);
+            return favorito;
+            // Nota: No se llama SaveChanges aquí, eso lo hace el UnitOfWork (Commit).
         }
 
-        public async Task EliminarFavorito(int idUsuario, int idDestino)
+        public void Remove(Favorito favorito)
         {
-            var favorito = await _context.Favoritos
-                .FirstOrDefaultAsync(f => f.IdUsuario == idUsuario && f.IdEntidad == idDestino);
+            _context.Favoritos.Remove(favorito);
+            // Nota: No se llama SaveChanges aquí, eso lo hace el UnitOfWork (Commit).
+        }
 
-            if (favorito != null)
-            {
-                _context.Favoritos.Remove(favorito);
-            }
+        public async Task<Favorito?> GetByIdAsync(int idUsuario, int idEntidad, TipoFavorito tipoEntidad)
+        {
+            // Búsqueda por llave compuesta
+            return await _context.Favoritos
+                .Where(f => f.IdUsuario == idUsuario && 
+                            f.IdEntidad == idEntidad && 
+                            f.TipoEntidad == tipoEntidad)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Favorito>> GetByUserIdAsync(int idUsuario)
+        {
+            return await _context.Favoritos
+                .Where(f => f.IdUsuario == idUsuario)
+                // Incluimos la navegación a Usuario si fuera necesario mostrar datos del usuario
+                // .Include(f => f.IdUsuarioNavigation) 
+                .ToListAsync();
+        }
+
+        public async Task<bool> ExistsAsync(int idUsuario, int idEntidad, TipoFavorito tipoEntidad)
+        {
+            return await _context.Favoritos
+                .AnyAsync(f => f.IdUsuario == idUsuario && 
+                               f.IdEntidad == idEntidad && 
+                               f.TipoEntidad == tipoEntidad);
         }
     }
 }

@@ -1,11 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using Aventour.Application.Interfaces;
 
 namespace Aventour.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IFavoritoRepository FavoritoRepository { get; }
+        IFavoritoRepository Favoritos { get; }
+
         // Agrega aquí los repositorios a medida que los vayas creando
         IDestinoRepository Destinos { get; }
         
@@ -15,5 +17,6 @@ namespace Aventour.Domain.Interfaces
 
         // Método para guardar todos los cambios en la base de datos de una sola vez
         Task<int> SaveChangesAsync();
+        Task<int> CommitAsync();
     }
 }

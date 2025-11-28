@@ -1,15 +1,20 @@
 using Aventour.Domain.Entities;
+using Aventour.Domain.Enums;
 
-namespace Aventour.Domain.Interfaces
+namespace Aventour.Application.Interfaces
 {
     public interface IFavoritoRepository
     {
-        // Devuelve una tupla o clase con info del favorito y del destino
-        // Dado que Favorito no tiene navegación directa a Destino en tu entidad actual,
-        // devolveremos una estructura combinada o el Favorito puro y haremos join en Infra.
-        Task<IEnumerable<dynamic>> ListarFavoritosPorUsuario(int idUsuario);
-        Task AgregarFavorito(Favorito favorito);
-        Task EliminarFavorito(int idUsuario, int idDestino);
-        Task<bool> ExisteFavorito(int idUsuario, int idDestino);
+        // C - CREATE
+        Task<Favorito> AddAsync(Favorito favorito);
+
+        // R - READ
+        Task<Favorito?> GetByIdAsync(int idUsuario, int idEntidad, TipoFavorito tipoEntidad);
+        Task<IEnumerable<Favorito>> GetByUserIdAsync(int idUsuario);
+        Task<bool> ExistsAsync(int idUsuario, int idEntidad, TipoFavorito tipoEntidad);
+
+        // U - UPDATE (No se requiere en esta tabla, solo se crea o elimina)
+        // D - DELETE
+        void Remove(Favorito favorito);
     }
 }

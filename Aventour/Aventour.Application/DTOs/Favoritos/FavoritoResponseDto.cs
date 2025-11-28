@@ -1,11 +1,12 @@
-namespace Aventour.Application.DTOs.Favoritos
+using Aventour.Domain.Enums;
+
+namespace Aventour.Application.DTOs.Favoritos;
+
+public class FavoritoResponseDto
 {
-    public class FavoritoResponseDto
-    {
-        public int IdDestino { get; set; }
-        public string NombreDestino { get; set; } = null!;
-        public string DescripcionBreve { get; set; } = null!;
-        public string? UrlFotoPrincipal { get; set; }
-        public DateTime? FechaGuardado { get; set; }
-    }
+    public int IdEntidad { get; set; }
+    public TipoFavorito TipoEntidad { get; set; }
+    public DateTime FechaGuardado { get; set; }
+    
+    // Opcional: Podrías incluir un campo "NombreEntidad" si haces un join manual en el servicio.
 }

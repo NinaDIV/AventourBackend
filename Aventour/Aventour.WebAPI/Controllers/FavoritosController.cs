@@ -1,71 +1,98 @@
-using Aventour.Application.DTOs.Favoritos;
-using Aventour.Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+using Aventour.Application.DTOs;
+using Aventour.Application.Services.Favoritos;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System;
+using Aventour.Application.DTOs.Favoritos;
 
 namespace Aventour.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    // ADAPTADOR PRIMARIO: Expone el caso de uso GestorFavoritosService
+    [Route("api/v1/[controller]")]
     [ApiController]
-    [Authorize] // Requiere token JWT
+    // [Authorize] // Asumimos que esta acción está protegida
     public class FavoritosController : ControllerBase
     {
-        private readonly IFavoritoService _favoritoService;
-
-        public FavoritosController(IFavoritoService favoritoService)
+        private readonly GestorFavoritosService _gestorFavoritos;
+        
+        // Constructor con inyección de dependencia del Caso de Uso
+        public FavoritosController(GestorFavoritosService gestorFavoritos)
         {
-            _favoritoService = favoritoService;
+            _gestorFavoritos = gestorFavoritos;
         }
 
-        // Helper para obtener ID del token
-        private int ObtenerIdUsuarioLogueado()
+        private int GetUserIdFromToken()
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                var userClaims = identity.Claims;
-                // Ajusta "uid" o "id" según como hayas configurado tu JWT
-                var idClaim = userClaims.FirstOrDefault(x => x.Type == "uid")?.Value; 
-                if (int.TryParse(idClaim, out int id)) return id;
-            }
-            return 0;
+            // SIMULACIÓN: En una aplicación real, esto se obtiene del claim JWT
+            // return int.Parse(User.FindFirst("id_usuario").Value);
+            return 1; // ID de usuario de prueba
         }
 
+        /// <summary>
+        /// Obtiene todos los favoritos del usuario autenticado.
+        /// </summary>
         [HttpGet]
-        public async Task<IActionResult> ListarFavoritos()
+        [ProducesResponseType(typeof(IEnumerable<FavoritoDTO>), 200)]
+        public async Task<ActionResult<IEnumerable<FavoritoDTO>>> GetFavoritosUsuario()
         {
-            int idUsuario = ObtenerIdUsuarioLogueado();
-            if (idUsuario == 0) return Unauthorized("Usuario no identificado");
-
-            var resultado = await _favoritoService.ObtenerFavoritosUsuario(idUsuario);
-            return Ok(resultado);
+            int userId = GetUserIdFromToken();
+            var favoritos = await _gestorFavoritos.ObtenerFavoritosPorUsuarioAsync(userId);
+            return Ok(favoritos);
         }
 
+        /// <summary>
+        /// Agrega un nuevo destino o lugar a la lista de favoritos del usuario.
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> AgregarFavorito([FromBody] CrearFavoritoDto dto)
+        [ProducesResponseType(typeof(FavoritoDTO), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(409)] // Conflict (si ya existe)
+        public async Task<ActionResult<FavoritoDTO>> PostFavorito([FromBody] FavoritoInputDTO dto)
         {
-            int idUsuario = ObtenerIdUsuarioLogueado();
-            if (idUsuario == 0) return Unauthorized("Usuario no identificado");
-
-            var exito = await _favoritoService.AgregarFavorito(idUsuario, dto);
+            int userId = GetUserIdFromToken();
             
-            if (!exito) return Conflict(new { mensaje = "El destino ya está en favoritos" });
-
-            return Ok(new { mensaje = "Favorito agregado correctamente" });
+            try
+            {
+                var nuevoFavorito = await _gestorFavoritos.AgregarFavoritoAsync(userId, dto);
+                // Retorna 201 Created
+                return CreatedAtAction(nameof(GetFavoritosUsuario), nuevoFavorito); 
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Conflict 409: El favorito ya existe
+                return Conflict(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Bad Request 400: Error de validación o datos
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
-        [HttpDelete("{idDestino}")]
-        public async Task<IActionResult> EliminarFavorito(int idDestino)
+        /// <summary>
+        /// Elimina un favorito de la lista del usuario.
+        /// </summary>
+        [HttpDelete]
+        [ProducesResponseType(204)] // No Content
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeleteFavorito([FromBody] FavoritoInputDTO dto)
         {
-            int idUsuario = ObtenerIdUsuarioLogueado();
-            if (idUsuario == 0) return Unauthorized("Usuario no identificado");
+            int userId = GetUserIdFromToken();
 
-            var exito = await _favoritoService.EliminarFavorito(idUsuario, idDestino);
-
-            if (!exito) return NotFound(new { mensaje = "Favorito no encontrado" });
-
-            return Ok(new { mensaje = "Favorito eliminado correctamente" });
+            try
+            {
+                // El servicio maneja el caso de que el favorito no exista (retorna true)
+                await _gestorFavoritos.EliminarFavoritoAsync(userId, dto);
+                
+                // Retorna 204 No Content para una eliminación exitosa o si no se encontró
+                return NoContent(); 
+            }
+             catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

@@ -1,43 +1,49 @@
+using Aventour.Application.Interfaces;
 using Aventour.Domain.Interfaces;
 using Aventour.Infrastructure.Persistence.Context;
 using Aventour.Infrastructure.Persistence.Repositories;
+using Aventour.Infrastructure.Repositories;
 
 namespace Aventour.Infrastructure.Persistence.UnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
+    
     {
-        public IFavoritoRepository FavoritoRepository { get; private set; }
         private readonly AventourDbContext _context;
         
-        // Variable privada para almacenar la instancia del repositorio
+        // Campos privados para lazy loading
+        private IFavoritoRepository? _favoritoRepository;
+        // Implementación Lazy del Repositorio de Favoritos
+        public IFavoritoRepository Favoritos => _favoritoRepository ??= new FavoritoRepository(_context);
+        // Método central para persistir todos los cambios
+        public async Task<int> CommitAsync()
+        {
+            // EF Core realiza el seguimiento, y SaveChangesAsync ejecuta la transacción.
+            return await _context.SaveChangesAsync();
+        }
         private IDestinoRepository? _destinos;
-
+        
+        // Constructor with dependency injection
         public UnitOfWork(AventourDbContext context)
         {
             _context = context;
-            FavoritoRepository = new FavoritoRepository(_context);
         }
 
-        // Implementación del Patrón Singleton por Request:
-        // Solo crea la instancia del repositorio si se solicita.
-        public IDestinoRepository Destinos
-        {
-            get
-            {
-                // Si _destinos es nulo, crea una nueva instancia inyectando el contexto actual.
-                // Si ya existe, devuelve la misma instancia.
-                return _destinos ??= new DestinoRepository(_context);
-            }
-        }
+        // Lazy initialization of repositories
+        public IDestinoRepository Destinos => _destinos ??= new DestinoRepository(_context);
 
+        // Save changes to the database
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
         }
 
+        // Dispose method for releasing resources
         public void Dispose()
         {
+            // Dispose of the context and the repositories (if necessary)
             _context.Dispose();
+           
             GC.SuppressFinalize(this);
         }
     }

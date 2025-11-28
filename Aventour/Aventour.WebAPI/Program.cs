@@ -2,7 +2,9 @@ using System.Text;
 using Aventour.Application.Interfaces;
 using Aventour.Application.Services;
 using Aventour.Application.Services.Destinos;
+using Aventour.Application.Services.Favoritos;
 using Aventour.Application.UseCases.Destinos;
+using Aventour.Domain.Enums; // IMPORTANTE: Agregar este using
 using Aventour.Domain.Interfaces;
 using Aventour.Infrastructure.Authentication;
 using Aventour.Infrastructure.Persistence.Context;
@@ -13,17 +15,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
+ 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // =============================================================
-// 1. CONFIGURAR BASE DE DATOS (POSTGRES / SQLSERVER / OTRO)
+// 1. CONFIGURAR BASE DE DATOS (POSTGRES) - CORRECCIÓN AQUÍ
 // =============================================================
 builder.Services.AddDbContext<AventourDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("AventourConnection"))
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AventourConnection"), 
+        // 🔥 ESTA ES LA LÍNEA MÁGICA QUE FALTA 🔥
+        // Le dice a Npgsql: "Cuando veas el enum C# TipoFavorito, úsalo como 'tipo_favorito' en Postgres"
+        o => o.MapEnum<TipoFavorito>("tipo_favorito"))
 );
-
 
 // =============================================================
 // 2. SWAGGER + JWT SEGURIDAD
@@ -37,7 +41,6 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1" 
     });
 
-    // Habilitar botón Authorize en Swagger
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme 
     {
         Name = "Authorization",
@@ -64,30 +67,35 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// REGISTRO DEL UNIT OF WORK
-// Usamos AddScoped porque debe vivir lo mismo que la petición HTTP
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // =============================================================
 // 3. INYECCIÓN DE DEPENDENCIAS HEXAGONAL
 // =============================================================
+// Usuarios
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 
-// DESTINOS TURISTICOS 
-
+// Destinos
 builder.Services.AddScoped<IDestinoRepository, DestinoRepository>();
 builder.Services.AddScoped<IGestionarDestinosUseCase, GestionarDestinosUseCase>();
 builder.Services.AddScoped<IConsultarDestinosUseCase, ConsultarDestinosUseCase>();
 builder.Services.AddScoped<IDestinoService, DestinoService>();
-// favoritos 
 
+// 1. Repositorio (Infraestructura)
+// Asocia la interfaz con su implementación concreta para el acceso a datos.
+ 
+// 1. Repositorios (Adaptadores de Salida)
 builder.Services.AddScoped<IFavoritoRepository, FavoritoRepository>();
-builder.Services.AddScoped<IFavoritoService, FavoritoService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<GestorFavoritosService>();
+// 2. Servicio/Lógica de Negocio (Aplicación)
+// Asocia la interfaz con su implementación de la lógica de negocio.
+ 
 
 // =============================================================
-// 4. AUTENTICACIÓN JWT (VALIDACIÓN DE TOKENS)
+// 4. AUTENTICACIÓN JWT
 // =============================================================
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -106,7 +114,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Controllers
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -122,9 +129,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// **IMPORTANTE:** Primero autenticación, luego autorización
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
 app.Run();
