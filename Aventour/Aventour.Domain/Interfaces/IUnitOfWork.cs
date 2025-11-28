@@ -5,6 +5,7 @@ namespace Aventour.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
+        IFavoritoRepository FavoritoRepository { get; }
         // Agrega aquí los repositorios a medida que los vayas creando
         IDestinoRepository Destinos { get; }
         

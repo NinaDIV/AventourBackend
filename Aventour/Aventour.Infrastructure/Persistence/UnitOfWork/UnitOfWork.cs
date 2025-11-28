@@ -6,6 +6,7 @@ namespace Aventour.Infrastructure.Persistence.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
+        public IFavoritoRepository FavoritoRepository { get; private set; }
         private readonly AventourDbContext _context;
         
         // Variable privada para almacenar la instancia del repositorio
@@ -14,6 +15,7 @@ namespace Aventour.Infrastructure.Persistence.UnitOfWork
         public UnitOfWork(AventourDbContext context)
         {
             _context = context;
+            FavoritoRepository = new FavoritoRepository(_context);
         }
 
         // Implementación del Patrón Singleton por Request:
