@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <Folder Include="Services\Destinos\" />
-      <Folder Include="UseCases\" />
     </ItemGroup>
 
 </Project>
