@@ -3,6 +3,8 @@ using Aventour.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Aventour.Application.Services.Favoritos;
+using Aventour.Domain.Enums;
 
 namespace Aventour.WebAPI.Controllers
 {
@@ -74,14 +76,54 @@ namespace Aventour.WebAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> EliminarFavorito([FromBody] FavoritoCreateDto dto)
         {
-            int userId = ObtenerIdUsuarioAutenticado(); // ID automático
+            int userId = ObtenerIdUsuarioAutenticado(); 
             
-            // Usamos el DTO de entrada porque tiene IdEntidad y TipoEntidad
             bool eliminado = await _favoritoService.RemoveFavoritoAsync(userId, dto.IdEntidad, dto.TipoEntidad);
             
             if (!eliminado) return NotFound(new { message = "El favorito no existe." });
             
             return NoContent();
+        }
+        
+        // GET: api/v1/Favoritos/Destino/1
+        [HttpGet("{tipoEntidad}/{idEntidad}")]
+        public async Task<ActionResult<FavoritoDto>> ObtenerFavorito(TipoFavorito tipoEntidad, int idEntidad)
+        {
+            // Extraemos el ID del usuario del Token JWT
+            var idUsuarioStr = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (string.IsNullOrEmpty(idUsuarioStr)) return Unauthorized("Token inválido");
+            int idUsuario = int.Parse(idUsuarioStr);
+
+            try
+            {
+                var favorito = await _favoritoService.GetFavoritoByIdAsync(idUsuario, idEntidad, tipoEntidad);
+                return Ok(favorito);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+// PUT: api/v1/Favoritos/Destino/1
+        [HttpPut("{tipoEntidad}/{idEntidad}")]
+        public async Task<IActionResult> ActualizarFavorito(TipoFavorito tipoEntidad, int idEntidad)
+        {
+            var idUsuarioStr = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (string.IsNullOrEmpty(idUsuarioStr)) return Unauthorized("Token inválido");
+            int idUsuario = int.Parse(idUsuarioStr);
+
+            try
+            {
+                // Llamamos al servicio para actualizar (ej. la fecha)
+                await _favoritoService.UpdateFavoritoAsync(idUsuario, idEntidad, tipoEntidad);
+        
+                return NoContent(); 
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 }
