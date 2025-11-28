@@ -1,8 +1,12 @@
 using System.Text;
 using Aventour.Application.Services;
+using Aventour.Application.Services.Destinos;
+using Aventour.Application.UseCases.Destinos;
 using Aventour.Domain.Interfaces;
 using Aventour.Infrastructure.Authentication;
 using Aventour.Infrastructure.Persistence.Context;
+using Aventour.Infrastructure.Persistence.Repositories;
+using Aventour.Infrastructure.Persistence.UnitOfWork;
 using Aventour.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -59,12 +63,23 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// REGISTRO DEL UNIT OF WORK
+// Usamos AddScoped porque debe vivir lo mismo que la petición HTTP
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 // =============================================================
 // 3. INYECCIÓN DE DEPENDENCIAS HEXAGONAL
 // =============================================================
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<JwtTokenGenerator>();
+
+// DESTINOS TURISTICOS 
+
+builder.Services.AddScoped<IDestinoRepository, DestinoRepository>();
+builder.Services.AddScoped<IGestionarDestinosUseCase, GestionarDestinosUseCase>();
+builder.Services.AddScoped<IConsultarDestinosUseCase, ConsultarDestinosUseCase>();
+builder.Services.AddScoped<IDestinoService, DestinoService>();
 
 // =============================================================
 // 4. AUTENTICACIÓN JWT (VALIDACIÓN DE TOKENS)
