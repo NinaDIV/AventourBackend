@@ -33,10 +33,10 @@ var connectionString = builder.Configuration.GetConnectionString("AventourConnec
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 
 // C. Mapear tus Enums AQUÍ. Deben coincidir exactamente con los nombres en Postgres.
-dataSourceBuilder.MapEnum<TipoFavorito>("tipo_favorito");
-dataSourceBuilder.MapEnum<TipoAgenciaGuia>("tipo_agencia_guia");
-dataSourceBuilder.MapEnum<TipoResena>("tipo_resena");
-dataSourceBuilder.MapEnum<TipoHotelRest>("tipo_hotel_rest");
+// dataSourceBuilder.MapEnum<TipoFavorito>("public.tipo_favorito");
+// dataSourceBuilder.MapEnum<TipoAgenciaGuia>("public.tipo_agencia_guia");
+dataSourceBuilder.MapEnum<TipoResena>("public.tipo_resena");
+dataSourceBuilder.MapEnum<TipoHotelRest>("public.tipo_hotel_rest");
 
 // D. Construir el DataSource
 var dataSource = dataSourceBuilder.Build();
