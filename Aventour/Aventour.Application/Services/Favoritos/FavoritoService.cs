@@ -67,5 +67,31 @@ namespace Aventour.Application.Services.Favoritos // O UseCases
             await _unitOfWork.CommitAsync();
             return true;
         }
+        
+        public async Task<FavoritoDto> GetFavoritoByIdAsync(int idUsuario, int idEntidad, TipoFavorito tipo)
+        {
+            // Usamos el repositorio que ya tenías
+            var favorito = await _unitOfWork.Favoritos.GetFavoritoAsync(idUsuario, idEntidad, tipo);
+
+            if (favorito == null)
+                throw new KeyNotFoundException($"No se encontró el favorito de tipo {tipo} con ID {idEntidad}.");
+
+            return _mapper.Map<FavoritoDto>(favorito);
+        }
+
+        public async Task UpdateFavoritoAsync(int idUsuario, int idEntidad, TipoFavorito tipo)
+        {
+            // 1. Recuperar la entidad desde la BD (Entity Framework la rastrea)
+            var favorito = await _unitOfWork.Favoritos.GetFavoritoAsync(idUsuario, idEntidad, tipo);
+
+            if (favorito == null)
+                throw new KeyNotFoundException($"No se puede actualizar. El favorito no existe.");
+
+            // 2. Modificar la entidad (EF detecta el cambio automáticamente)
+            favorito.FechaGuardado = DateTime.UtcNow; // "Refrescamos" el favorito
+
+            // 3. Guardar cambios
+            await _unitOfWork.CommitAsync();
+        }
     }
 }
