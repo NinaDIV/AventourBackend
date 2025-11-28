@@ -1,4 +1,5 @@
 using System.Text;
+using Aventour.Application.Interfaces;
 using Aventour.Application.Services;
 using Aventour.Application.Services.Destinos;
 using Aventour.Application.UseCases.Destinos;
@@ -80,6 +81,10 @@ builder.Services.AddScoped<IDestinoRepository, DestinoRepository>();
 builder.Services.AddScoped<IGestionarDestinosUseCase, GestionarDestinosUseCase>();
 builder.Services.AddScoped<IConsultarDestinosUseCase, ConsultarDestinosUseCase>();
 builder.Services.AddScoped<IDestinoService, DestinoService>();
+// favoritos 
+
+builder.Services.AddScoped<IFavoritoRepository, FavoritoRepository>();
+builder.Services.AddScoped<IFavoritoService, FavoritoService>();
 
 // =============================================================
 // 4. AUTENTICACIÓN JWT (VALIDACIÓN DE TOKENS)
