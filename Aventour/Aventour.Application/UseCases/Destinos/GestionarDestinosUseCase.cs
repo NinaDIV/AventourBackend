@@ -3,31 +3,37 @@ using Aventour.Domain.Interfaces;
 
 namespace Aventour.Application.UseCases.Destinos
 {
-    // CASOS DE USO DE COMANDOS (Escritura)
     public class GestionarDestinosUseCase : IGestionarDestinosUseCase
     {
-        private readonly IDestinoRepository _repository;
+        // 1. Inyectamos IUnitOfWork, NO el repositorio directo
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GestionarDestinosUseCase(IDestinoRepository repository)
+        public GestionarDestinosUseCase(IUnitOfWork unitOfWork)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<int> CrearDestino(DestinosTuristico destino)
         {
-            // Aquí podrías validar reglas de negocio (ej. no duplicar nombres exactos)
-            var existentes = await _repository.BuscarPorNombreAsync(destino.Nombre);
+            // Validaciones usando el repositorio a través del UoW
+            var existentes = await _unitOfWork.Destinos.BuscarPorNombreAsync(destino.Nombre);
             if (existentes.Any()) throw new Exception("El destino ya existe.");
 
-            return await _repository.CrearAsync(destino);
+            // 2. Preparamos la creación (esto no guarda en BD todavía)
+            await _unitOfWork.Destinos.CrearAsync(destino);
+
+            // 3. AQUÍ guardamos los cambios definitivamente
+            await _unitOfWork.SaveChangesAsync();
+
+            return destino.IdDestino;
         }
 
         public async Task ActualizarDestino(DestinosTuristico destino)
         {
-            var existente = await _repository.ObtenerPorIdAsync(destino.IdDestino);
+            var existente = await _unitOfWork.Destinos.ObtenerPorIdAsync(destino.IdDestino);
             if (existente == null) throw new Exception("Destino no encontrado.");
 
-            // Actualizamos campos
+            // Mapeo de campos
             existente.Nombre = destino.Nombre;
             existente.DescripcionBreve = destino.DescripcionBreve;
             existente.DescripcionCompleta = destino.DescripcionCompleta;
@@ -38,40 +44,20 @@ namespace Aventour.Application.UseCases.Destinos
             existente.CostoEntrada = destino.CostoEntrada;
             existente.UrlFotoPrincipal = destino.UrlFotoPrincipal;
 
-            await _repository.ActualizarAsync(existente);
+            // Preparamos la actualización
+            await _unitOfWork.Destinos.ActualizarAsync(existente);
+
+            // Guardamos cambios
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task EliminarDestino(int id)
         {
-            await _repository.EliminarAsync(id);
-        }
-    }
+            // Preparamos la eliminación
+            await _unitOfWork.Destinos.EliminarAsync(id);
 
-    // CASOS DE USO DE CONSULTAS (Lectura)
-    public class ConsultarDestinosUseCase : IConsultarDestinosUseCase
-    {
-        private readonly IDestinoRepository _repository;
-
-        public ConsultarDestinosUseCase(IDestinoRepository repository)
-        {
-            _repository = repository;
-        }
-
-        public async Task<IEnumerable<DestinosTuristico>> ListarDestinos()
-        {
-            return await _repository.ListarAsync();
-        }
-
-        public async Task<DestinosTuristico> ObtenerDestino(int id)
-        {
-            var destino = await _repository.ObtenerPorIdAsync(id);
-            if (destino == null) throw new KeyNotFoundException($"No se encontró el destino con ID {id}");
-            return destino;
-        }
-
-        public async Task<IEnumerable<DestinosTuristico>> BuscarDestinos(string nombre)
-        {
-            return await _repository.BuscarPorNombreAsync(nombre);
+            // Guardamos cambios
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
