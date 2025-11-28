@@ -165,9 +165,8 @@ public partial class AventourDbContext : DbContext
 
         modelBuilder.Entity<Favorito>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("favoritos");
+            entity.HasKey(e => new { e.IdUsuario, e.IdEntidad }).HasName("favoritos_pkey");
+            entity.ToTable("favoritos");
 
             entity.Property(e => e.FechaGuardado)
                 .HasDefaultValueSql("now()")
