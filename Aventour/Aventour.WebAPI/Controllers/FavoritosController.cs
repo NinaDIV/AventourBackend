@@ -106,19 +106,19 @@ namespace Aventour.WebAPI.Controllers
         }
 
 // PUT: api/v1/Favoritos/Destino/1
-        [HttpPut("{tipoEntidad}/{idEntidad}")]
-        public async Task<IActionResult> ActualizarFavorito(TipoFavorito tipoEntidad, int idEntidad)
+        [HttpPut]
+        public async Task<IActionResult> ActualizarFavorito([FromBody] FavoritoCreateDto dto)
         {
-            var idUsuarioStr = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-            if (string.IsNullOrEmpty(idUsuarioStr)) return Unauthorized("Token inválido");
-            int idUsuario = int.Parse(idUsuarioStr);
-
             try
             {
-                // Llamamos al servicio para actualizar (ej. la fecha)
-                await _favoritoService.UpdateFavoritoAsync(idUsuario, idEntidad, tipoEntidad);
+                // 1. Obtener ID del usuario desde el Token
+                int userId = ObtenerIdUsuarioAutenticado();
+
+                // 2. Llamar al servicio usando los datos del JSON
+                await _favoritoService.UpdateFavoritoAsync(userId, dto.IdEntidad, dto.TipoEntidad);
         
-                return NoContent(); 
+                // 3. Retornar éxito
+                return NoContent(); // 204 OK
             }
             catch (KeyNotFoundException ex)
             {
