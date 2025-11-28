@@ -1,7 +1,5 @@
 using System;
-using System.Threading.Tasks;
-using Aventour.Application.Interfaces;
-
+ 
 namespace Aventour.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable

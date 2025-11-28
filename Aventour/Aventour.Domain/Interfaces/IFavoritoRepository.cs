@@ -1,20 +1,17 @@
-using Aventour.Domain.Entities;
-using Aventour.Domain.Enums;
+// Aventour.Domain.Interfaces/IFavoritoRepository.cs
+using Aventour.Domain.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Aventour.Application.Interfaces
+namespace Aventour.Domain.Interfaces
 {
     public interface IFavoritoRepository
     {
-        // C - CREATE
-        Task<Favorito> AddAsync(Favorito favorito);
-
-        // R - READ
-        Task<Favorito?> GetByIdAsync(int idUsuario, int idEntidad, TipoFavorito tipoEntidad);
-        Task<IEnumerable<Favorito>> GetByUserIdAsync(int idUsuario);
-        Task<bool> ExistsAsync(int idUsuario, int idEntidad, TipoFavorito tipoEntidad);
-
-        // U - UPDATE (No se requiere en esta tabla, solo se crea o elimina)
-        // D - DELETE
-        void Remove(Favorito favorito);
+        Task<Favorito?> GetFavoritoAsync(int idUsuario, int idEntidad);
+        Task<List<Favorito>> GetFavoritosByUsuarioAsync(int idUsuario);
+        Task AddFavoritoAsync(Favorito favorito);
+        Task DeleteFavoritoAsync(Favorito favorito);
+        // Opcional: Para el CRUD completo, pero no necesario para esta entidad de cruce
+        // Task UpdateFavoritoAsync(Favorito favorito); 
     }
 }

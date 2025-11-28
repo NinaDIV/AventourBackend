@@ -1,21 +1,21 @@
 using System.Text;
-using Aventour.Application.Interfaces;
+using Aventour.Application.DTOs;
 using Aventour.Application.Services;
 using Aventour.Application.Services.Destinos;
-using Aventour.Application.Services.Favoritos;
 using Aventour.Application.UseCases.Destinos;
-using Aventour.Domain.Enums; // IMPORTANTE: Agregar este using
+using Aventour.Application.UseCases.Favoritos;
 using Aventour.Domain.Interfaces;
 using Aventour.Infrastructure.Authentication;
 using Aventour.Infrastructure.Persistence.Context;
 using Aventour.Infrastructure.Persistence.Repositories;
-using Aventour.Infrastructure.Persistence.UnitOfWork;
-using Aventour.Infrastructure.Repositories;
+using Aventour.Infrastructure.Persistence.UnitOfWork; // Asumo que IUnitOfWork está implementado aquí
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
- 
+using Aventour.Application.UseCases.Favoritos; // Asegúrate de tener este using para la interfaz
+using Aventour.Application.Services.Favoritos;
+using Aventour.Infrastructure.Repositories; // Asumo que la implementación está aquí
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,32 +67,36 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
 // =============================================================
-// 3. INYECCIÓN DE DEPENDENCIAS HEXAGONAL
+// 3. INYECCIÓN DE DEPENDENCIAS HEXAGONAL 🧱
 // =============================================================
-// Usuarios
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<UsuarioService>();
-builder.Services.AddScoped<JwtTokenGenerator>();
 
-// Destinos
-builder.Services.AddScoped<IDestinoRepository, DestinoRepository>();
-builder.Services.AddScoped<IGestionarDestinosUseCase, GestionarDestinosUseCase>();
-builder.Services.AddScoped<IConsultarDestinosUseCase, ConsultarDestinosUseCase>();
-builder.Services.AddScoped<IDestinoService, DestinoService>();
+// Repositorios y Unidad de Trabajo (Infraestructura / Adaptadores de Salida)
+// Se elimina la línea duplicada IUnitOfWork.
 
 // 1. Repositorio (Infraestructura)
-// Asocia la interfaz con su implementación concreta para el acceso a datos.
- 
-// 1. Repositorios (Adaptadores de Salida)
-builder.Services.AddScoped<IFavoritoRepository, FavoritoRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<GestorFavoritosService>();
-// 2. Servicio/Lógica de Negocio (Aplicación)
-// Asocia la interfaz con su implementación de la lógica de negocio.
- 
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Registro central de UoW
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IDestinoRepository, DestinoRepository>();
+builder.Services.AddScoped<IFavoritoRepository, FavoritoRepository>(); // Repositorio de Favoritos
+
+// Servicios / Casos de Uso (Aplicación / Dominio)
+// Servicios de Usuarios
+builder.Services.AddScoped<UsuarioService>(); // Si no tiene interfaz
+builder.Services.AddScoped<JwtTokenGenerator>();
+
+// Servicios de Destinos
+builder.Services.AddScoped<IDestinoService, DestinoService>();
+builder.Services.AddScoped<IGestionarDestinosUseCase, GestionarDestinosUseCase>();
+builder.Services.AddScoped<IConsultarDestinosUseCase, ConsultarDestinosUseCase>();
+
+// Servicios de Favoritos (Tanto la interfaz como la implementación)
+// Registro de AutoMapper: Busca todos los perfiles (como FavoritoMappingProfile) en el ensamblado de Aventour.Application
+// Usamos el ensamblado de una clase conocida en la capa Application, como FavoritoDto.
+builder.Services.AddAutoMapper(typeof(FavoritoDto).Assembly);
+
+// Registro de los Servicios/Casos de Uso
+builder.Services.AddScoped<IFavoritoService, FavoritoService>();
 
 // =============================================================
 // 4. AUTENTICACIÓN JWT

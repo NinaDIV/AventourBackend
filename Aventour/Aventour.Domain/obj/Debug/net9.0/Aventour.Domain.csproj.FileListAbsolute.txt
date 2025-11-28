@@ -10,3 +10,16 @@ C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\Aventour
 C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\refint\Aventour.Domain.dll
 C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.pdb
 C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\ref\Aventour.Domain.dll
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\bin\Debug\net9.0\Aventour.Domain.deps.json
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\bin\Debug\net9.0\Aventour.Domain.dll
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\bin\Debug\net9.0\Aventour.Domain.pdb
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.csproj.AssemblyReference.cache
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.AssemblyInfoInputs.cache
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.AssemblyInfo.cs
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.sourcelink.json
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.dll
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\refint\Aventour.Domain.dll
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.pdb
+C:\Users\Ogro\Documents\.NET\dd\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\ref\Aventour.Domain.dll

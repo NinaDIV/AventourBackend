@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "ox5MDyB3crQ=",
+  "dgSpecHash": "cGptqm1s0H0=",
   "success": true,
   "projectFilePath": "C:\\Users\\Ogro\\Documents\\.NET\\dd\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Ogro\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\Ogro\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\Ogro\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Ogro\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\9.0.11\\microsoft.aspnetcore.authentication.jwtbearer.9.0.11.nupkg.sha512",
+    "C:\\Users\\Ogro\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\Ogro\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.11\\microsoft.entityframeworkcore.9.0.11.nupkg.sha512",
     "C:\\Users\\Ogro\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.11\\microsoft.entityframeworkcore.abstractions.9.0.11.nupkg.sha512",
     "C:\\Users\\Ogro\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.11\\microsoft.entityframeworkcore.analyzers.9.0.11.nupkg.sha512",

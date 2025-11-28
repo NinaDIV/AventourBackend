@@ -1,4 +1,5 @@
 ﻿using Aventour.Domain.Entities;
+using Aventour.Domain.Enums;
 
 namespace Aventour.Domain.Models;
 
@@ -8,8 +9,8 @@ public partial class Favorito
 
     public int IdEntidad { get; set; }
     
-    public string TipoEntidad { get; set; } = null!;
-
+    // Ahora usa el enum
+    public TipoFavorito TipoEntidad { get; set; }
     public DateTime? FechaGuardado { get; set; }
 
     public virtual Usuario IdUsuarioNavigation { get; set; } = null!;

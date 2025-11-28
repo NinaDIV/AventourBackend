@@ -40,8 +40,9 @@ public partial class AventourDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresEnum<TipoAgenciaGuia>("tipo_agencia_guia");
+        modelBuilder.HasPostgresEnum<TipoFavorito>("tipo_favorito");
         modelBuilder
-            .HasPostgresEnum("tipo_favorito", new[] { "Destino", "Lugar" })
+            //.HasPostgresEnum("tipo_favorito", new[] { "Destino", "Lugar" })
             .HasPostgresEnum("tipo_hotel_rest", new[] { "Hotel", "Restaurante" })
             .HasPostgresEnum("tipo_resena", new[] { "Destino", "Agencia", "Guia" });
 
@@ -110,17 +111,23 @@ public partial class AventourDbContext : DbContext
         
         modelBuilder.Entity<Favorito>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("favoritos");
+            // Define la clave primaria compuesta
+            entity.HasKey(e => new { e.IdUsuario, e.IdEntidad }).HasName("favoritos_pkey"); 
+            entity.ToTable("favoritos");
 
             entity.Property(e => e.FechaGuardado)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("fecha_guardado");
+                
             entity.Property(e => e.IdEntidad).HasColumnName("id_entidad");
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
-
+            
+            // Mapeo del enum TipoFavorito a la columna tipo_entidad
+            entity.Property(e => e.TipoEntidad)
+                .HasColumnType("tipo_favorito") // Usa el tipo de enum de la BD
+                .HasColumnName("tipo_entidad");
+                  
             entity.HasOne(d => d.IdUsuarioNavigation).WithMany()
                 .HasForeignKey(d => d.IdUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)

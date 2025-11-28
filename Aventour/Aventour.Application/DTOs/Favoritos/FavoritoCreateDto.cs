@@ -3,15 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Aventour.Application.DTOs
 {
-    public class FavoritoCreationDto
+    public class FavoritoCreateDto
     {
-        [Required]
-        public int IdUsuario { get; set; }
-        
-        [Required]
+        // El IdUsuario se obtendrá del token o la sesión
         public int IdEntidad { get; set; }
-
-        [Required]
         public TipoFavorito TipoEntidad { get; set; }
     }
 }

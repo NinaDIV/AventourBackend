@@ -20,7 +20,10 @@ namespace Aventour.Domain.Enums
     }
     public enum TipoFavorito
     {
+        [PgName("Destino")]
         Destino,
+        
+        [PgName("Lugar")]
         Lugar
     }
     public enum TipoHotelRest

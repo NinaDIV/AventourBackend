@@ -1,4 +1,4 @@
-using Aventour.Application.Interfaces;
+ 
 using Aventour.Domain.Interfaces;
 using Aventour.Infrastructure.Persistence.Context;
 using Aventour.Infrastructure.Persistence.Repositories;
@@ -12,9 +12,9 @@ namespace Aventour.Infrastructure.Persistence.UnitOfWork
         private readonly AventourDbContext _context;
         
         // Campos privados para lazy loading
-        private IFavoritoRepository? _favoritoRepository;
+        private IFavoritoRepository? _favoritos;
         // Implementación Lazy del Repositorio de Favoritos
-        public IFavoritoRepository Favoritos => _favoritoRepository ??= new FavoritoRepository(_context);
+        public IFavoritoRepository Favoritos => _favoritos ??= new FavoritoRepository(_context);
         // Método central para persistir todos los cambios
         public async Task<int> CommitAsync()
         {

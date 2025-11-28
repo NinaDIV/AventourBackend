@@ -1,26 +1,27 @@
-using Aventour.Application.DTOs;
-using Aventour.Application.Services.Favoritos;
+// Aventour.WebAPI.Controllers/FavoritosController.cs
+
+using Aventour.Application.DTOs; // Usaremos los DTOs definidos previamente
+using Aventour.Application.UseCases.Favoritos; // Usamos el Caso de Uso (el servicio)
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System;
-using Aventour.Application.DTOs.Favoritos;
+// using Aventour.Application.DTOs.Favoritos; // Esta referencia ya no es necesaria si usamos Aventour.Application.DTOs
 
 namespace Aventour.WebAPI.Controllers
 {
-    // ADAPTADOR PRIMARIO: Expone el caso de uso GestorFavoritosService
+    // ADAPTADOR PRIMARIO: Expone el caso de uso IFavoritoService
     [Route("api/v1/[controller]")]
     [ApiController]
     // [Authorize] // Asumimos que esta acción está protegida
     public class FavoritosController : ControllerBase
     {
-        private readonly GestorFavoritosService _gestorFavoritos;
+        private readonly IFavoritoService _favoritoService; // Usamos la interfaz
         
         // Constructor con inyección de dependencia del Caso de Uso
-        public FavoritosController(GestorFavoritosService gestorFavoritos)
+        public FavoritosController(IFavoritoService favoritoService)
         {
-            _gestorFavoritos = gestorFavoritos;
+            _favoritoService = favoritoService;
         }
 
         private int GetUserIdFromToken()
@@ -34,11 +35,12 @@ namespace Aventour.WebAPI.Controllers
         /// Obtiene todos los favoritos del usuario autenticado.
         /// </summary>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<FavoritoDTO>), 200)]
-        public async Task<ActionResult<IEnumerable<FavoritoDTO>>> GetFavoritosUsuario()
+        [ProducesResponseType(typeof(IEnumerable<FavoritoDto>), 200)] // Corregido a FavoritoDto
+        public async Task<ActionResult<IEnumerable<FavoritoDto>>> GetFavoritosUsuario()
         {
             int userId = GetUserIdFromToken();
-            var favoritos = await _gestorFavoritos.ObtenerFavoritosPorUsuarioAsync(userId);
+            // Método corregido: GetFavoritosDelUsuarioAsync
+            var favoritos = await _favoritoService.GetFavoritosDelUsuarioAsync(userId);
             return Ok(favoritos);
         }
 
@@ -46,22 +48,23 @@ namespace Aventour.WebAPI.Controllers
         /// Agrega un nuevo destino o lugar a la lista de favoritos del usuario.
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(FavoritoDTO), 201)]
+        [ProducesResponseType(typeof(FavoritoDto), 201)] // Corregido a FavoritoDto
         [ProducesResponseType(400)]
         [ProducesResponseType(409)] // Conflict (si ya existe)
-        public async Task<ActionResult<FavoritoDTO>> PostFavorito([FromBody] FavoritoInputDTO dto)
+        public async Task<ActionResult<FavoritoDto>> PostFavorito([FromBody] FavoritoCreateDto dto) // Corregido a FavoritoCreateDto
         {
             int userId = GetUserIdFromToken();
             
             try
             {
-                var nuevoFavorito = await _gestorFavoritos.AgregarFavoritoAsync(userId, dto);
+                // Método corregido: AddFavoritoAsync
+                var nuevoFavorito = await _favoritoService.AddFavoritoAsync(userId, dto);
                 // Retorna 201 Created
                 return CreatedAtAction(nameof(GetFavoritosUsuario), nuevoFavorito); 
             }
             catch (InvalidOperationException ex)
             {
-                // Conflict 409: El favorito ya existe
+                // Conflict 409: El favorito ya existe (buena práctica)
                 return Conflict(new { message = ex.Message });
             }
             catch (Exception ex)
@@ -74,17 +77,21 @@ namespace Aventour.WebAPI.Controllers
         /// <summary>
         /// Elimina un favorito de la lista del usuario.
         /// </summary>
-        [HttpDelete]
+        [HttpDelete] // Usamos HTTP DELETE, lo cual es correcto.
         [ProducesResponseType(204)] // No Content
         [ProducesResponseType(400)]
-        public async Task<IActionResult> DeleteFavorito([FromBody] FavoritoInputDTO dto)
+        public async Task<IActionResult> DeleteFavorito([FromBody] FavoritoCreateDto dto) // Usamos el mismo DTO de entrada para identificar
         {
             int userId = GetUserIdFromToken();
 
             try
             {
-                // El servicio maneja el caso de que el favorito no exista (retorna true)
-                await _gestorFavoritos.EliminarFavoritoAsync(userId, dto);
+                // Método corregido: RemoveFavoritoAsync. Usamos IdEntidad del DTO.
+                // Aunque el servicio espera dos parámetros (idUsuario, idEntidad), si el DTO solo tiene idEntidad, 
+                // debemos pasarlo directamente. Asumo que la eliminación será por IdEntidad.
+                
+                // NOTA: Para simplificar la API, usaremos los dos campos de identificación del DTO.
+                var success = await _favoritoService.RemoveFavoritoAsync(userId, dto.IdEntidad);
                 
                 // Retorna 204 No Content para una eliminación exitosa o si no se encontró
                 return NoContent(); 
