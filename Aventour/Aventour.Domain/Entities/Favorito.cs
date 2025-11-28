@@ -1,21 +1,16 @@
-﻿using Aventour.Domain.Enums;
-using System;
+﻿using Aventour.Domain.Entities;
 
-namespace Aventour.Domain.Entities;
+namespace Aventour.Domain.Models;
 
-public class Favorito
+public partial class Favorito
 {
-    // Clave Compuesta 1: ID del Usuario que guardó el favorito
-    public int IdUsuario { get; set; } 
-    
-    // Clave Compuesta 2: ID de la entidad (Destino, Hotel, Agencia, etc.)
-    public int IdEntidad { get; set; } 
-    
-    // Clave Compuesta 3: Tipo de la entidad (define si IdEntidad es un Destino, Hotel, etc.)
-    public TipoFavorito TipoEntidad { get; set; }
-    
-    public DateTime FechaGuardado { get; set; }
+    public int IdUsuario { get; set; }
 
-    // Propiedad de Navegación (Relación con la tabla Usuarios)
+    public int IdEntidad { get; set; }
+    
+    public string TipoEntidad { get; set; } = null!;
+
+    public DateTime? FechaGuardado { get; set; }
+
     public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
 }

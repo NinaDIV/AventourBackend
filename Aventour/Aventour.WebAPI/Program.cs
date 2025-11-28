@@ -19,15 +19,15 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// =============================================================
-// 1. CONFIGURAR BASE DE DATOS (POSTGRES) - CORRECCIÓN AQUÍ
-// =============================================================
+// ===============================================
+// 1. Agregar conexión a PostgreSQL usando appsettings.json
+// ===============================================
 builder.Services.AddDbContext<AventourDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("AventourConnection"), 
-        // 🔥 ESTA ES LA LÍNEA MÁGICA QUE FALTA 🔥
-        // Le dice a Npgsql: "Cuando veas el enum C# TipoFavorito, úsalo como 'tipo_favorito' en Postgres"
-        o => o.MapEnum<TipoFavorito>("tipo_favorito"))
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AventourConnection"))
 );
+
+// Necesario para PostgreSQL (fecha y enums)
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // =============================================================
 // 2. SWAGGER + JWT SEGURIDAD

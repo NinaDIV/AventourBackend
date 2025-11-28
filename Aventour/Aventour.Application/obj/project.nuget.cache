@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YPNT/TSW2ak=",
+  "dgSpecHash": "ox5MDyB3crQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj",
+  "projectFilePath": "C:\\Users\\Ogro\\Documents\\.NET\\dd\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ogro\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Ogro\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\9.0.11\\microsoft.aspnetcore.authentication.jwtbearer.9.0.11.nupkg.sha512",

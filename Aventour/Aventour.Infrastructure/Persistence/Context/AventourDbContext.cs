@@ -1,6 +1,7 @@
 ﻿using Aventour.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Aventour.Domain.Enums;
+using Aventour.Domain.Models;
 
 namespace Aventour.Infrastructure.Persistence.Context;
 
@@ -16,72 +17,33 @@ public partial class AventourDbContext : DbContext
     }
 
     public virtual DbSet<AgenciasGuia> AgenciasGuias { get; set; }
+
     public virtual DbSet<DestinosTuristico> DestinosTuristicos { get; set; }
+
     public virtual DbSet<DetallePackDestino> DetallePackDestinos { get; set; }
+
     public virtual DbSet<DetalleRuta> DetalleRutas { get; set; }
+
     public virtual DbSet<Favorito> Favoritos { get; set; }
+
     public virtual DbSet<HotelesRestaurante> HotelesRestaurantes { get; set; }
+
     public virtual DbSet<PacksRutasAgencium> PacksRutasAgencia { get; set; }
+
     public virtual DbSet<Resena> Resenas { get; set; }
+
     public virtual DbSet<RutasPersonalizada> RutasPersonalizadas { get; set; }
+
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        // IMPORTANTE: Solo configuramos aquí si NO viene configurado desde Program.cs
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseNpgsql("Host=dpg-d4f0bn8dl3ps73b82m0g-a.virginia-postgres.render.com;Port=5432;Database=aventourdb;Username=aventourdb_user;Password=1VVBtz3YFtbArD6XhfQyGDSfGekzAmFa",
-                // Agregamos el mapeo aquí también por seguridad (para migraciones CLI)
-                o => o.MapEnum<TipoFavorito>("tipo_favorito"));
-        }
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // 1. REGISTRO GLOBAL DEL ENUM
-        modelBuilder.HasPostgresEnum<TipoFavorito>("tipo_favorito");
-        
-        
-    
-
-        
+        modelBuilder.HasPostgresEnum<TipoAgenciaGuia>("tipo_agencia_guia");
         modelBuilder
-            .HasPostgresEnum("tipo_agencia_guia", new[] { "Agencia", "Guía" })
+            .HasPostgresEnum("tipo_favorito", new[] { "Destino", "Lugar" })
             .HasPostgresEnum("tipo_hotel_rest", new[] { "Hotel", "Restaurante" })
             .HasPostgresEnum("tipo_resena", new[] { "Destino", "Agencia", "Guia" });
-
-        // ... Resto de tu configuración de entidades ...
-        // (He mantenido el código de Favorito como debe quedar)
-
-        // 2. Configuración de FAVORITO (CORREGIDA)
-        modelBuilder.Entity<Favorito>(entity =>
-        {
-            // CORRECCIÓN CRÍTICA: La PK debe incluir el TipoEntidad para soportar IDs repetidos en diferentes tablas
-            entity.HasKey(e => new { e.IdUsuario, e.IdEntidad, e.TipoEntidad }).HasName("favoritos_pkey");
-            
-            entity.ToTable("favoritos");
-
-            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
-            entity.Property(e => e.IdEntidad).HasColumnName("id_entidad");
-            
-            entity.Property(e => e.FechaGuardado)
-                .HasDefaultValueSql("now()")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("fecha_guardado");
-
-            // Mapeo explicito del Enum
-            entity.Property(e => e.TipoEntidad)
-                .HasColumnName("tipo_entidad")
-                .IsRequired();
-
-            // Relación solo con Usuario (No puede haber FK a Destino/Hotel directamente por ser polimórfico)
-            entity.HasOne(d => d.IdUsuarioNavigation)
-                .WithMany() // O .WithMany(u => u.Favoritos) si agregas la colección a Usuario
-                .HasForeignKey(d => d.IdUsuario)
-                .OnDelete(DeleteBehavior.Cascade) // Si borras el usuario, se borran sus favoritos
-                .HasConstraintName("favoritos_id_usuario_fkey");
-        });
 
         // ... El resto de tus entidades se mantienen igual (AgenciasGuia, Destinos, etc) ...
         // Para ahorrar espacio, asegúrate de mantener el resto de tu código original aquí abajo
@@ -144,19 +106,53 @@ public partial class AventourDbContext : DbContext
             entity.HasOne(d => d.IdDestinoNavigation).WithMany(p => p.DetalleRuta).HasForeignKey(d => d.IdDestino).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("detalle_rutas_id_destino_fkey");
             entity.HasOne(d => d.IdRutaNavigation).WithMany(p => p.DetalleRuta).HasForeignKey(d => d.IdRuta).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("detalle_rutas_id_ruta_fkey");
         });
+        
+        
+        modelBuilder.Entity<Favorito>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("favoritos");
+
+            entity.Property(e => e.FechaGuardado)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("fecha_guardado");
+            entity.Property(e => e.IdEntidad).HasColumnName("id_entidad");
+            entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany()
+                .HasForeignKey(d => d.IdUsuario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("favoritos_id_usuario_fkey");
+        });
 
         modelBuilder.Entity<HotelesRestaurante>(entity =>
         {
             entity.HasKey(e => e.IdLugar).HasName("hoteles_restaurantes_pkey");
-            entity.ToTable("hoteles_restaurantes");
-            entity.Property(e => e.IdLugar).HasColumnName("id_lugar");
-            entity.Property(e => e.Direccion).HasMaxLength(255).HasColumnName("direccion");
-            entity.Property(e => e.Latitud).HasPrecision(10, 8).HasColumnName("latitud");
-            entity.Property(e => e.Longitud).HasPrecision(11, 8).HasColumnName("longitud");
-            entity.Property(e => e.Nombre).HasMaxLength(255).HasColumnName("nombre");
-            entity.Property(e => e.PuntuacionMedia).HasPrecision(2, 1).HasDefaultValueSql("0.0").HasColumnName("puntuacion_media");
-        });
 
+            entity.ToTable("hoteles_restaurantes");
+
+            entity.Property(e => e.IdLugar).HasColumnName("id_lugar");
+            entity.Property(e => e.Direccion)
+                .HasMaxLength(255)
+                .HasColumnName("direccion");
+            entity.Property(e => e.Latitud)
+                .HasPrecision(10, 8)
+                .HasColumnName("latitud");
+            entity.Property(e => e.Longitud)
+                .HasPrecision(11, 8)
+                .HasColumnName("longitud");
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(255)
+                .HasColumnName("nombre");
+            entity.Property(e => e.PuntuacionMedia)
+                .HasPrecision(2, 1)
+                .HasDefaultValueSql("0.0")
+                .HasColumnName("puntuacion_media");
+        });
+        
+        
         modelBuilder.Entity<PacksRutasAgencium>(entity =>
         {
             entity.HasKey(e => e.IdPack).HasName("packs_rutas_agencia_pkey");
@@ -184,27 +180,50 @@ public partial class AventourDbContext : DbContext
         modelBuilder.Entity<Resena>(entity =>
         {
             entity.HasKey(e => e.IdResena).HasName("resenas_pkey");
+
             entity.ToTable("resenas");
+
             entity.Property(e => e.IdResena).HasColumnName("id_resena");
             entity.Property(e => e.Comentario).HasColumnName("comentario");
-            entity.Property(e => e.FechaCreacion).HasDefaultValueSql("now()").HasColumnType("timestamp without time zone").HasColumnName("fecha_creacion");
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("fecha_creacion");
             entity.Property(e => e.IdEntidad).HasColumnName("id_entidad");
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
             entity.Property(e => e.Puntuacion).HasColumnName("puntuacion");
-            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Resenas).HasForeignKey(d => d.IdUsuario).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("resenas_id_usuario_fkey");
+
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Resenas)
+                .HasForeignKey(d => d.IdUsuario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("resenas_id_usuario_fkey");
         });
 
         modelBuilder.Entity<RutasPersonalizada>(entity =>
         {
             entity.HasKey(e => e.IdRuta).HasName("rutas_personalizadas_pkey");
+
             entity.ToTable("rutas_personalizadas");
+
             entity.Property(e => e.IdRuta).HasColumnName("id_ruta");
-            entity.Property(e => e.FechaCreacion).HasDefaultValueSql("now()").HasColumnType("timestamp without time zone").HasColumnName("fecha_creacion");
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("fecha_creacion");
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
-            entity.Property(e => e.IsPublica).HasDefaultValue(false).HasColumnName("is_publica");
-            entity.Property(e => e.NombreRuta).HasMaxLength(255).HasColumnName("nombre_ruta");
-            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.RutasPersonalizada).HasForeignKey(d => d.IdUsuario).OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("rutas_personalizadas_id_usuario_fkey");
+            entity.Property(e => e.IsPublica)
+                .HasDefaultValue(false)
+                .HasColumnName("is_publica");
+            entity.Property(e => e.NombreRuta)
+                .HasMaxLength(255)
+                .HasColumnName("nombre_ruta");
+
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.RutasPersonalizada)
+                .HasForeignKey(d => d.IdUsuario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("rutas_personalizadas_id_usuario_fkey");
         });
+
 
         modelBuilder.Entity<Usuario>(entity =>
         {
