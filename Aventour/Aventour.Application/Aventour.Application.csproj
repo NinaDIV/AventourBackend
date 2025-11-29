@@ -17,7 +17,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UseCases\IFavorito\" />
+      <Folder Include="DTOs\Resena\" />
+      <Folder Include="Services\Resena\" />
+      <Folder Include="UseCases\Resena\" />
     </ItemGroup>
 
 </Project>

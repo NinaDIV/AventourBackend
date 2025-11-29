@@ -1668,19 +1668,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Tecsup\\.nuget\\packages\\": {}
+    "C:\\Users\\Ogro\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Tecsup\\Documents\\GitHub\\AventourBackend\\Aventour\\Aventour.WebAPI\\Aventour.WebAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.WebAPI\\Aventour.WebAPI.csproj",
       "projectName": "Aventour.WebAPI",
-      "projectPath": "C:\\Users\\Tecsup\\Documents\\GitHub\\AventourBackend\\Aventour\\Aventour.WebAPI\\Aventour.WebAPI.csproj",
-      "packagesPath": "C:\\Users\\Tecsup\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Tecsup\\Documents\\GitHub\\AventourBackend\\Aventour\\Aventour.WebAPI\\obj\\",
+      "projectPath": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.WebAPI\\Aventour.WebAPI.csproj",
+      "packagesPath": "C:\\Users\\Ogro\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.WebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Tecsup\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Ogro\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -1692,11 +1692,11 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\Tecsup\\Documents\\GitHub\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj": {
-              "projectPath": "C:\\Users\\Tecsup\\Documents\\GitHub\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj"
+            "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj": {
+              "projectPath": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Application\\Aventour.Application.csproj"
             },
-            "C:\\Users\\Tecsup\\Documents\\GitHub\\AventourBackend\\Aventour\\Aventour.Infrastructure\\Aventour.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\Tecsup\\Documents\\GitHub\\AventourBackend\\Aventour\\Aventour.Infrastructure\\Aventour.Infrastructure.csproj"
+            "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Infrastructure\\Aventour.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\Ogro\\Documents\\TypeNote-App-de-Notas-Minimalista-para-iOS-main\\AventourBackend\\Aventour\\Aventour.Infrastructure\\Aventour.Infrastructure.csproj"
             }
           }
         }
@@ -1749,7 +1749,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.308/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

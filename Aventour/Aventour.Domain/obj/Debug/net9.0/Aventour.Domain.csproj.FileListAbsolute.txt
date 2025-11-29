@@ -36,3 +36,4 @@ C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Domain\obj\De
 C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\refint\Aventour.Domain.dll
 C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.pdb
 C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\ref\Aventour.Domain.dll
+C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.csproj.AssemblyReference.cache
