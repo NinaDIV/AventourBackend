@@ -1,5 +1,9 @@
 # 🌍 Aventour Backend API
 
+<p align="center">
+  <img src="Galeria/api.png" alt="Aventour API" width="600"/>
+</p>
+
 Bienvenido al backend de **Aventour**, una plataforma de gestión turística construida sobre **.NET 9**. Este proyecto sigue estrictamente los principios de **Arquitectura Hexagonal (Clean Architecture)** para garantizar la mantenibilidad, testabilidad y desacoplamiento de componentes.
 
 ## 🏗️ Arquitectura del Proyecto
