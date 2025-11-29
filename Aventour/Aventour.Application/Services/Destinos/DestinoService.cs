@@ -1,6 +1,7 @@
 using Aventour.Application.DTOs.Destinos;
 using Aventour.Application.UseCases.Destinos;
 using Aventour.Domain.Entities;
+using Aventour.Domain.Enums;
 
 namespace Aventour.Application.Services.Destinos
 {
@@ -10,6 +11,13 @@ namespace Aventour.Application.Services.Destinos
         Task<DestinoResponseDto> ObtenerPorId(int id);
         Task<int> Crear(CrearDestinoDto dto);
         Task Actualizar(UpdateDestinoDto dto);
+        
+        Task ActualizarPuntuacionMedia(int id);
+
+        
+        
+ 
+
         Task Eliminar(int id);
     }
 
@@ -17,12 +25,27 @@ namespace Aventour.Application.Services.Destinos
     {
         private readonly IGestionarDestinosUseCase _gestionarUseCase;
         private readonly IConsultarDestinosUseCase _consultarUseCase;
+        
+        
+        public async Task ActualizarPuntuacionMedia(int id)
+        {
+            // Obtener el destino existente
+            var destino = await _consultarUseCase.ObtenerDestino(id);
+            if (destino == null)
+                throw new KeyNotFoundException();
+
+            // Calcular o actualizar la puntuación media según tu lógica
+            // Ejemplo simple: si tu UseCase ya maneja el cálculo, solo llamas al gestionarUseCase
+            await _gestionarUseCase.ActualizarPuntuacionMedia(id);
+        }
+
 
         public DestinoService(IGestionarDestinosUseCase gestionarUseCase, IConsultarDestinosUseCase consultarUseCase)
         {
             _gestionarUseCase = gestionarUseCase;
             _consultarUseCase = consultarUseCase;
         }
+        
 
         public async Task<IEnumerable<DestinoResponseDto>> ListarTodos()
         {

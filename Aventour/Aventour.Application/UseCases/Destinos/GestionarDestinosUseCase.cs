@@ -59,5 +59,10 @@ namespace Aventour.Application.UseCases.Destinos
             // Guardamos cambios
             await _unitOfWork.SaveChangesAsync();
         }
+
+        public Task ActualizarPuntuacionMedia(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

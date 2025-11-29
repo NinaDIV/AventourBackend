@@ -14,6 +14,26 @@ namespace Aventour.API.Controllers
         {
             _destinoService = destinoService;
         }
+        
+        // PATCH: api/Destinos/puntuacion
+        [HttpPatch("{id}/puntuacion")]
+        public async Task<IActionResult> ActualizarPuntuacionMedia(int id)
+        {
+            try
+            {
+                await _destinoService.ActualizarPuntuacionMedia(id);
+                return NoContent(); // 204 OK
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"No se encontró el destino con ID {id}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error al actualizar la puntuación: {ex.Message}");
+            }
+        }
+
 
         // GET: api/Destinos
         [HttpGet]

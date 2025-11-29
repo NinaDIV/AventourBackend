@@ -158,6 +158,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// 🔹 Middleware para detectar tokens expirados
+app.UseMiddleware<Aventour.WebAPI.Middleware.TokenExpirationMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -9,6 +9,7 @@ namespace Aventour.Application.UseCases.Destinos
         Task<int> CrearDestino(DestinosTuristico destino);
         Task ActualizarDestino(DestinosTuristico destino);
         Task EliminarDestino(int id);
+        Task ActualizarPuntuacionMedia(int id);
     }
 
     public interface IConsultarDestinosUseCase
