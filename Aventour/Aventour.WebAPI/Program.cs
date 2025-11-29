@@ -4,6 +4,7 @@ using Aventour.Application.DTOs;
 using Aventour.Application.Services; // UsuarioService
 using Aventour.Application.Services.Destinos;
 using Aventour.Application.Services.Favoritos;
+using Aventour.Application.Services.Resenas;
 using Aventour.Application.UseCases.Destinos;
  
 using Aventour.Domain.Enums; // <--- Necesario para tus Enums
@@ -38,8 +39,14 @@ var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 dataSourceBuilder.MapEnum<TipoResena>("public.tipo_resena");
 dataSourceBuilder.MapEnum<TipoHotelRest>("public.tipo_hotel_rest");
 
+
+builder.Services.AddScoped<IAgenciaRepository, AgenciaRepository>();
 // D. Construir el DataSource
 var dataSource = dataSourceBuilder.Build();
+
+//Reseñas
+builder.Services.AddScoped<IResenaRepository, ResenaRepository>();
+builder.Services.AddScoped<IResenaService, ResenaService>();
 
 // E. Inyectar el DbContext usando el dataSource configurado
 builder.Services.AddDbContext<AventourDbContext>(options =>

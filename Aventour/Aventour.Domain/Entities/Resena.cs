@@ -1,4 +1,6 @@
-﻿namespace Aventour.Domain.Entities;
+﻿using Aventour.Domain.Enums;
+
+namespace Aventour.Domain.Entities;
 
 public partial class Resena
 {
@@ -8,6 +10,7 @@ public partial class Resena
 
     public int IdEntidad { get; set; }
 
+    public TipoResena TipoEntidad { get; set; }
     public int Puntuacion { get; set; }
 
     public string? Comentario { get; set; }

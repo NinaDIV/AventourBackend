@@ -21,7 +21,7 @@ namespace Aventour.Infrastructure.Persistence.Repositories
             // Pero como configuramos el conversion, pasamos el enum directo.
             return await _context.Resenas
                 .Include(r => r.IdUsuarioNavigation) // Incluimos usuario para mostrar el nombre si es necesario
-                .Where(r => r.IdEntidad == idEntidad && r.TipoEntidad == tipoEntidad.ToString()) 
+                .Where(r => r.IdEntidad == idEntidad && r.TipoEntidad == tipoEntidad) 
                 .OrderByDescending(r => r.FechaCreacion)
                 .ToListAsync();
         }
@@ -39,7 +39,7 @@ namespace Aventour.Infrastructure.Persistence.Repositories
             return await _context.Resenas
                 .FirstOrDefaultAsync(r => r.IdUsuario == idUsuario && 
                                           r.IdEntidad == idEntidad && 
-                                          r.TipoEntidad == tipoEntidad.ToString());
+                                          r.TipoEntidad == tipoEntidad);
         }
 
         public async Task<Resena?> GetByIdAsync(int idResena)

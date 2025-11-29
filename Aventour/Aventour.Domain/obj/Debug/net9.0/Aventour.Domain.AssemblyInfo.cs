@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aventour.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+66cabb9dfe915e289863f9aa343663c5a0a90263")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32b917babda3a6f84dd68609537e581863ab5c2e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aventour.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aventour.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -16,6 +16,9 @@ namespace Aventour.Infrastructure.Persistence.UnitOfWork
         // Implementación Lazy del Repositorio de Favoritos
         public IFavoritoRepository Favoritos => _favoritos ??= new FavoritoRepository(_context);
         // Método central para persistir todos los cambios
+        public IResenaRepository Resenas { get; }
+        public IAgenciaRepository Agencias { get; }
+
         public async Task<int> CommitAsync()
         {
             // EF Core realiza el seguimiento, y SaveChangesAsync ejecuta la transacción.

@@ -175,6 +175,11 @@ public partial class AventourDbContext : DbContext
             entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
             entity.Property(e => e.IdEntidad).HasColumnName("id_entidad");
             
+            // --- AGREGA ESTA CONFIGURACIÓN ---
+            entity.Property(e => e.TipoEntidad)
+                .HasColumnName("tipo_entidad")
+                .HasConversion<string>(); // Esto convierte Enum <-> String automáticamente
+            // ---------------------------------
 
             entity.Property(e => e.Puntuacion).HasColumnName("puntuacion");
             entity.Property(e => e.Comentario).HasColumnName("comentario");
