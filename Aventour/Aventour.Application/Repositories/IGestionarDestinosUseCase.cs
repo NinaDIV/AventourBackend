@@ -17,5 +17,6 @@ namespace Aventour.Application.UseCases.Destinos
         Task<IEnumerable<DestinosTuristico>> ListarDestinos();
         Task<DestinosTuristico> ObtenerDestino(int id);
         Task<IEnumerable<DestinosTuristico>> BuscarDestinos(string nombre);
+        Task ActualizarPuntuacionMedia(int id);  
     }
 }

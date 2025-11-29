@@ -72,9 +72,37 @@ namespace Aventour.Application.Services // O Services.Resenas
 
         public async Task<List<ResenaDto>> GetResenasDelUsuarioAsync(int idUsuario)
         {
+            // Imprimir en consola el idUsuario para ver si es el valor correcto
+            Console.WriteLine($"Consultando reseñas para el usuario con ID: {idUsuario}");
+
+            // Obtener la lista de reseñas del usuario
             var lista = await _unitOfWork.Resenas.GetResenasByUsuarioAsync(idUsuario);
-            return _mapper.Map<List<ResenaDto>>(lista);
+
+            // Verificar si la lista es null o vacía
+            if (lista == null)
+            {
+                Console.WriteLine("No se encontraron reseñas para este usuario. Lista es null.");
+                return new List<ResenaDto>();  // Retornar una lista vacía si no hay reseñas
+            }
+
+            // Verificar si la lista está vacía
+            if (!lista.Any())
+            {
+                Console.WriteLine("No se encontraron reseñas para este usuario. Lista está vacía.");
+                return new List<ResenaDto>();  // Retornar una lista vacía si no hay reseñas
+            }
+
+            // Mapear la lista de entidades a DTOs
+            var result = _mapper.Map<List<ResenaDto>>(lista);
+
+            // Imprimir en consola para asegurarse de que se mapeó correctamente
+            Console.WriteLine($"Se encontraron {result.Count} reseñas para el usuario.");
+
+            return result;
         }
+
+
+
 
         public async Task<bool> DeleteResenaAsync(int idUsuario, int idResena)
         {

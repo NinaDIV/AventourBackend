@@ -41,7 +41,7 @@ namespace Aventour.Infrastructure.Authentication
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddHours(2), // El token dura 2 horas
+                expires: DateTime.Now.AddHours(8), // El token dura 2 horas
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

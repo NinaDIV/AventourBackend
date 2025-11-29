@@ -21,6 +21,9 @@ namespace Aventour.Application.Mapping
                 .ForMember(dest => dest.TipoEntidad, opt => opt.MapFrom(src => src.TipoEntidad.ToString()));
 
             CreateMap<FavoritoCreateDto, Favorito>();
+            
+            CreateMap<AgenciaCreateDto, AgenciasGuia>();
+            CreateMap<AgenciasGuia, AgenciaDto>();
 
             // Aquí puedes agregar más mapeos (Favoritos, Destinos, etc.)
         }

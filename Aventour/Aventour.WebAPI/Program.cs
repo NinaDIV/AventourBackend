@@ -1,7 +1,8 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Aventour.Application.DTOs;
-using Aventour.Application.Services; // UsuarioService
+using Aventour.Application.Services;
+using Aventour.Application.Services.Agencias; // UsuarioService
 using Aventour.Application.Services.Destinos;
 using Aventour.Application.Services.Favoritos;
 using Aventour.Application.Services.Resenas;
@@ -116,6 +117,10 @@ builder.Services.AddScoped<IConsultarDestinosUseCase, ConsultarDestinosUseCase>(
 // Favoritos (AutoMapper + Servicio)
 builder.Services.AddAutoMapper(typeof(FavoritoDto).Assembly);
 builder.Services.AddScoped<IFavoritoService, FavoritoService>();
+
+// REGISTRO DE SERVICIOS Y REPOSITORIOS  
+builder.Services.AddScoped<IAgenciaRepository, AgenciaRepository>();
+builder.Services.AddScoped<IAgenciaService, AgenciaService>();
 
 // =============================================================
 // 4. AUTENTICACIÓN JWT

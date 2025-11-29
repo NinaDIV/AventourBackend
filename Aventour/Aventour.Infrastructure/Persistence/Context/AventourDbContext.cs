@@ -50,6 +50,10 @@ public partial class AventourDbContext : DbContext
             entity.Property(e => e.PuntuacionMedia).HasPrecision(2, 1).HasDefaultValueSql("0.0").HasColumnName("puntuacion_media");
             entity.Property(e => e.Validado).HasDefaultValue(false).HasColumnName("validado");
             entity.Property(e => e.WhatsappContacto).HasMaxLength(20).HasColumnName("whatsapp_contacto");
+            // --- AGREGA ESTO ---
+            entity.Property(e => e.Tipo)
+                .HasColumnName("tipo")        // <--- Mapea 'Tipo' (C#) a 'tipo' (BD)
+                .HasConversion<string>();     // <--- Convierte el Enum a texto
             // Nota: Aquí se asume que 'Tipo' sigue siendo Enum en BD. 
             // Si cambias la BD, agrega .HasConversion<string>() aquí también.
         });

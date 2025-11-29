@@ -1,9 +1,17 @@
-namespace Aventour.Domain.Interfaces;
+using Aventour.Domain.Entities;
+using Aventour.Domain.Enums;
 
-using Aventour.Domain.Entities; // o Models según tu estructura
-
-public interface IAgenciaRepository
+namespace Aventour.Domain.Interfaces
 {
-    Task<AgenciasGuia> GetByIdAsync(int id);
-    // Otros métodos que necesites (Agregar, Eliminar, etc)
+    public interface IAgenciaRepository
+    {
+        Task<List<AgenciasGuia>> GetAllAsync(TipoAgenciaGuia? filtroTipo); // Opción para filtrar solo guías o agencias
+        Task<AgenciasGuia?> GetByIdAsync(int id);
+        Task AddAsync(AgenciasGuia entidad);
+        Task UpdateAsync(AgenciasGuia entidad); // Generic update (EF Core tracking)
+        Task DeleteAsync(AgenciasGuia entidad);
+        
+        // Método especial para recalcular el promedio desde la tabla Reseñas
+        Task RecalcularPuntuacionMediaAsync(int idAgencia);
+    }
 }

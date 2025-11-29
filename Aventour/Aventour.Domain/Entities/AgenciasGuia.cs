@@ -1,10 +1,14 @@
-﻿namespace Aventour.Domain.Entities;
+﻿using Aventour.Domain.Enums;
+
+namespace Aventour.Domain.Entities;
 
 public partial class AgenciasGuia
 {
     public int IdAgencia { get; set; }
 
     public string Nombre { get; set; } = null!;
+    
+    public TipoAgenciaGuia Tipo { get; set; }
 
     public string WhatsappContacto { get; set; } = null!;
 

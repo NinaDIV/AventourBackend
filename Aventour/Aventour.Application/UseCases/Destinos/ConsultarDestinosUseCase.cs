@@ -29,5 +29,10 @@ namespace Aventour.Application.UseCases.Destinos
         {
             return await _unitOfWork.Destinos.BuscarPorNombreAsync(nombre);
         }
+
+        public Task ActualizarPuntuacionMedia(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
