@@ -15,4 +15,6 @@ public partial class DetalleRuta
     public virtual DestinosTuristico IdDestinoNavigation { get; set; } = null!;
 
     public virtual RutasPersonalizada IdRutaNavigation { get; set; } = null!;
+    
+    
 }

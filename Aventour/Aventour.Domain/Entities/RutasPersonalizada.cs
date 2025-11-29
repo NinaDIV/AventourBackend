@@ -8,11 +8,11 @@ public partial class RutasPersonalizada
 
     public string NombreRuta { get; set; } = null!;
 
-    public DateTime? FechaCreacion { get; set; }
+    public DateTime FechaCreacion { get; set; }
 
     public bool? IsPublica { get; set; }
 
-    public virtual ICollection<DetalleRuta> DetalleRuta { get; set; } = new List<DetalleRuta>();
-
+    // Propiedades de Navegación
     public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+    public virtual ICollection<DetalleRuta> DetalleRuta { get; set; } = new List<DetalleRuta>();
 }

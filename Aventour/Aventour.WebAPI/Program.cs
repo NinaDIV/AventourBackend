@@ -5,6 +5,7 @@ using Aventour.Application.Services;
 using Aventour.Application.Services.Agencias; // UsuarioService
 using Aventour.Application.Services.Destinos;
 using Aventour.Application.Services.Favoritos;
+using Aventour.Application.Services.Packs;
 using Aventour.Application.Services.Resenas;
 using Aventour.Application.UseCases.Destinos;
  
@@ -35,40 +36,48 @@ var connectionString = builder.Configuration.GetConnectionString("AventourConnec
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 
 // C. Mapear tus Enums AQUÍ. Deben coincidir exactamente con los nombres en Postgres.
+// Estos Enum son mapeados para garantizar que se gestionen correctamente las enumeraciones en la base de datos.
+// Descomenta las siguientes líneas si las necesitas:
 // dataSourceBuilder.MapEnum<TipoFavorito>("public.tipo_favorito");
 // dataSourceBuilder.MapEnum<TipoAgenciaGuia>("public.tipo_agencia_guia");
 dataSourceBuilder.MapEnum<TipoResena>("public.tipo_resena");
 dataSourceBuilder.MapEnum<TipoHotelRest>("public.tipo_hotel_rest");
 
-
+// Registra el repositorio de Agencias para ser utilizado en los servicios
 builder.Services.AddScoped<IAgenciaRepository, AgenciaRepository>();
+
 // D. Construir el DataSource
 var dataSource = dataSourceBuilder.Build();
 
-//Reseñas
+// Registra servicios relacionados con Reseñas
 builder.Services.AddScoped<IResenaRepository, ResenaRepository>();
 builder.Services.AddScoped<IResenaService, ResenaService>();
 
-// E. Inyectar el DbContext usando el dataSource configurado
+// E. Inyectar el DbContext usando el DataSource configurado para interactuar con PostgreSQL
 builder.Services.AddDbContext<AventourDbContext>(options =>
     options.UseNpgsql(dataSource)
 );
 
-// (Opcional) Switch legacy para timestamps, aunque con el mapeo suele ser menos crítico
+// (Opcional) Switch legacy para timestamps en PostgreSQL
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // =============================================================
 // 2. SWAGGER + JWT SEGURIDAD
 // =============================================================
+
 builder.Services.AddEndpointsApiExplorer();
+
+// Configuración de Swagger para la documentación de la API
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo 
     { 
         Title = "Aventour API", 
-        Version = "v1" 
+        Version = "v1",
+        Description = "API para gestionar servicios turísticos en Arequipa, Perú"
     });
 
+    // Definición de la seguridad con JWT Bearer
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme 
     {
         Name = "Authorization",
@@ -79,6 +88,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Ingresa tu token JWT aquí usando el formato: Bearer {token}"
     });
 
+    // Requerimiento de seguridad en cada endpoint para la autenticación Bearer
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -99,17 +109,16 @@ builder.Services.AddSwaggerGen(options =>
 // 3. INYECCIÓN DE DEPENDENCIAS
 // =============================================================
 
-// --- Repositorios ---
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IDestinoRepository, DestinoRepository>();
 builder.Services.AddScoped<IFavoritoRepository, FavoritoRepository>();
 
-// --- Servicios / Casos de Uso ---
+// Servicios de usuario y autenticación
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<JwtTokenGenerator>();
 
-// Destinos
+// Configuración de servicios de Destinos y Casos de Uso
 builder.Services.AddScoped<IDestinoService, DestinoService>();
 builder.Services.AddScoped<IGestionarDestinosUseCase, GestionarDestinosUseCase>();
 builder.Services.AddScoped<IConsultarDestinosUseCase, ConsultarDestinosUseCase>();
@@ -118,13 +127,26 @@ builder.Services.AddScoped<IConsultarDestinosUseCase, ConsultarDestinosUseCase>(
 builder.Services.AddAutoMapper(typeof(FavoritoDto).Assembly);
 builder.Services.AddScoped<IFavoritoService, FavoritoService>();
 
-// REGISTRO DE SERVICIOS Y REPOSITORIOS  
+// Registros de servicios y repositorios relacionados con Agencias, Rutas, Packs, Hoteles y Restaurantes
 builder.Services.AddScoped<IAgenciaRepository, AgenciaRepository>();
 builder.Services.AddScoped<IAgenciaService, AgenciaService>();
+builder.Services.AddScoped<IRutaPersonalizadaRepository, RutaPersonalizadaRepository>();
+builder.Services.AddScoped<RutaPersonalizadaService>();
+builder.Services.AddScoped<IPackRutaRepository, PackRutaRepository>();
+builder.Services.AddScoped<PackRutaService>();
+builder.Services.AddScoped<IHotelRestauranteRepository, HotelRestauranteRepository>();
+builder.Services.AddScoped<HotelRestauranteService>();
+
+// Servicios para la creación de reportes
+builder.Services.AddScoped<ReporteService>();
+
+// Configuración para trabajar con JWT y la validación de tokens
+System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 // =============================================================
 // 4. AUTENTICACIÓN JWT
 // =============================================================
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -142,11 +164,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Configuración de Controladores y JSON
+// Configuración de controladores y opciones de JSON
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        // Esto permite que envíes "Destino" (string) en el JSON en lugar de 0 o 1
+        // Esto permite que envíes "Destino" (string) en el JSON en lugar de 0 o 1 para los Enums
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
@@ -155,6 +177,8 @@ var app = builder.Build();
 // =============================================================
 // 5. MIDDLEWARES
 // =============================================================
+
+// Configuración de Swagger UI solo en el entorno de desarrollo
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -163,12 +187,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// 🔹 Middleware para detectar tokens expirados
+// Middleware para manejar la expiración de tokens (esto debe manejar la expiración correctamente)
 app.UseMiddleware<Aventour.WebAPI.Middleware.TokenExpirationMiddleware>();
 
+// Configuración de autenticación y autorización
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Rutas de los controladores
 app.MapControllers();
 
+// Ejecuta la aplicación
 app.Run();

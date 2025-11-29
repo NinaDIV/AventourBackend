@@ -9,7 +9,6 @@ namespace Aventour.API.Controllers
     public class DestinosController : ControllerBase
     {
         private readonly IDestinoService _destinoService;
-
         public DestinosController(IDestinoService destinoService)
         {
             _destinoService = destinoService;

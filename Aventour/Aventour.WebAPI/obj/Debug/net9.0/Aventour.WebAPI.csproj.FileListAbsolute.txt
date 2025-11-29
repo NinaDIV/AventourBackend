@@ -130,3 +130,11 @@ C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\Aventour
 C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\obj\Debug\net9.0\Aventour.WebAPI.pdb
 C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\obj\Debug\net9.0\Aventour.WebAPI.genruntimeconfig.cache
 C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\obj\Debug\net9.0\ref\Aventour.WebAPI.dll
+C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\bin\Debug\net9.0\ClosedXML.dll
+C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\bin\Debug\net9.0\ClosedXML.Parser.dll
+C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\bin\Debug\net9.0\DocumentFormat.OpenXml.dll
+C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\bin\Debug\net9.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\bin\Debug\net9.0\ExcelNumberFormat.dll
+C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\bin\Debug\net9.0\RBush.dll
+C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\bin\Debug\net9.0\SixLabors.Fonts.dll
+C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.WebAPI\bin\Debug\net9.0\System.IO.Packaging.dll
