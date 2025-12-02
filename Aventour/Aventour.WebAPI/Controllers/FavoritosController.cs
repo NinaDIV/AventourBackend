@@ -1,24 +1,16 @@
 using Aventour.Application.DTOs;
- 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Aventour.Application.Services.Favoritos;
 using Aventour.Domain.Enums;
+using Aventour.WebAPI.Controllers.Base;
 
 namespace Aventour.WebAPI.Controllers
 {
-    
-    
-    
-    
     [Route("api/v1/[controller]")]
-    [ApiController]
-    [Authorize] // <--- ¡IMPORTANTE! Solo usuarios logueados pueden entrar aquí
-    public class FavoritosController : ControllerBase
+    [Authorize]
+    public class FavoritosController : BaseAuthenticatedController
     {
-        
-        
         private readonly IFavoritoService _favoritoService;
 
         public FavoritosController(IFavoritoService favoritoService)
@@ -26,24 +18,6 @@ namespace Aventour.WebAPI.Controllers
             _favoritoService = favoritoService;
         }
 
-        private int ObtenerIdUsuarioAutenticado()
-        {
-            // Intenta primero el claim "id" (como pusiste en tu JWT)
-            var idClaim = User.FindFirst("id")?.Value;
-
-            // Fallback a "id_usuario" si cambió
-            if (string.IsNullOrEmpty(idClaim))
-                idClaim = User.FindFirst("id_usuario")?.Value;
-
-            // Fallback al estándar NameIdentifier
-            if (string.IsNullOrEmpty(idClaim))
-                idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (int.TryParse(idClaim, out int id))
-                return id;
-
-            throw new UnauthorizedAccessException("No se pudo identificar al usuario desde el token.");
-        }
 
 
         [HttpGet]
