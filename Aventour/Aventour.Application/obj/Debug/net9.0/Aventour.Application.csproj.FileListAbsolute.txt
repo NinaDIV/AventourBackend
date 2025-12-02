@@ -52,3 +52,12 @@ C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Application\o
 C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\refint\Aventour.Application.dll
 C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\Aventour.Application.pdb
 C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\ref\Aventour.Application.dll
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\Aventour.Application.csproj.AssemblyReference.cache
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\Aventour.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\Aventour.Application.AssemblyInfoInputs.cache
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\Aventour.Application.AssemblyInfo.cs
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\Aventour.Application.csproj.CoreCompileInputs.cache
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\Aventour.Application.sourcelink.json
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\Aventour.Application.dll
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\refint\Aventour.Application.dll
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Application\obj\Debug\net9.0\Aventour.Application.pdb

@@ -1,25 +1,12 @@
 using Aventour.Application.DTOs.Destinos;
+using Aventour.Application.Repositories;
 using Aventour.Application.UseCases.Destinos;
 using Aventour.Domain.Entities;
 using Aventour.Domain.Enums;
 
 namespace Aventour.Application.Services.Destinos
 {
-    public interface IDestinoService
-    {
-        Task<IEnumerable<DestinoResponseDto>> ListarTodos();
-        Task<DestinoResponseDto> ObtenerPorId(int id);
-        Task<int> Crear(CrearDestinoDto dto);
-        Task Actualizar(UpdateDestinoDto dto);
-        
-        Task ActualizarPuntuacionMedia(int id);
 
-        
-        
- 
-
-        Task Eliminar(int id);
-    }
 
     public class DestinoService : IDestinoService
     {

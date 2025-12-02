@@ -37,3 +37,16 @@ C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Domain\obj\De
 C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.pdb
 C:\Users\Tecsup\Documents\GitHub\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\ref\Aventour.Domain.dll
 C:\Users\Ogro\Documents\TypeNote-App-de-Notas-Minimalista-para-iOS-main\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.csproj.AssemblyReference.cache
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\bin\Debug\net9.0\Aventour.Domain.deps.json
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\bin\Debug\net9.0\Aventour.Domain.dll
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\bin\Debug\net9.0\Aventour.Domain.pdb
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.csproj.AssemblyReference.cache
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.AssemblyInfoInputs.cache
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.AssemblyInfo.cs
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.csproj.CoreCompileInputs.cache
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.sourcelink.json
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.dll
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\refint\Aventour.Domain.dll
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\Aventour.Domain.pdb
+C:\Users\DELL\Desktop\laboratorio_12\Aventour\AventourBackend\Aventour\Aventour.Domain\obj\Debug\net9.0\ref\Aventour.Domain.dll
