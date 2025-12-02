@@ -2,14 +2,13 @@ using Aventour.Application.DTOs.Rutas;
 using Aventour.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Aventour.WebAPI.Controllers.Base;
 
 namespace Aventour.WebAPI.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [Authorize] 
-    public class RutaPersonalizadaController : ControllerBase
+    public class RutaPersonalizadaController : BaseAuthenticatedController
     {
         private readonly RutaPersonalizadaService _rutaService;
 
@@ -18,30 +17,6 @@ namespace Aventour.WebAPI.Controllers
             _rutaService = rutaService;
         }
 
-        // --- MÉTODO AUXILIAR PARA OBTENER ID ROBUSTO ---
-        private int ObtenerIdUsuarioAutenticado()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                // 1. Prioridad: Buscar el claim "id" que pusimos en el JwtTokenGenerator
-                var idClaim = identity.FindFirst("id");
-                if (idClaim != null && int.TryParse(idClaim.Value, out int id))
-                {
-                    return id;
-                }
-
-                // 2. Fallback: Buscar NameIdentifier (estándar de .NET)
-                var nameIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
-                if (nameIdClaim != null && int.TryParse(nameIdClaim.Value, out int idFromSub))
-                {
-                    return idFromSub;
-                }
-            }
-            
-            throw new UnauthorizedAccessException("ID de usuario no encontrado en el Token.");
-        }
-        // -----------------------------------------------
 
         [HttpPost]
         public async Task<IActionResult> CrearRuta([FromBody] CrearRutaDto dto)
