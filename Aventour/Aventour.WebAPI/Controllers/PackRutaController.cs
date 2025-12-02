@@ -1,15 +1,13 @@
 using Aventour.Application.DTOs.Packs;
-using Aventour.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Aventour.Application.Services.Packs;
+using Aventour.WebAPI.Controllers.Base;
 
 namespace Aventour.WebAPI.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class PackRutaController : ControllerBase
+    [Route("api/v1/[controller]")]
+    public class PackRutaController : BaseAuthenticatedController
     {
         private readonly PackRutaService _packService;
 
@@ -18,19 +16,6 @@ namespace Aventour.WebAPI.Controllers
             _packService = packService;
         }
 
-        private string ObtenerEmailUsuario()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            // Busca el Claim Sub (Email) o Name
-            var email = identity?.FindFirst(ClaimTypes.NameIdentifier)?.Value 
-                     ?? identity?.FindFirst("sub")?.Value 
-                     ?? identity?.FindFirst(ClaimTypes.Email)?.Value;
-
-            if (string.IsNullOrEmpty(email))
-                throw new UnauthorizedAccessException("No se pudo identificar el email del usuario en el token.");
-
-            return email;
-        }
 
         // GET: api/PackRuta (Público)
         [HttpGet]
@@ -66,14 +51,14 @@ namespace Aventour.WebAPI.Controllers
             }
         }
 
-        // POST: api/PackRuta (Requiere Auth)
+        // POST: api/v1/PackRuta (Requiere Auth)
         [HttpPost]
         [Authorize] 
         public async Task<IActionResult> CrearPack([FromBody] CrearPackDto dto)
         {
             try
             {
-                string email = ObtenerEmailUsuario();
+                string email = ObtenerEmailUsuarioAutenticado();
                 var idPack = await _packService.CrearPackAsync(email, dto);
                 return CreatedAtAction(nameof(ObtenerDetalle), new { id = idPack }, new { id = idPack, message = "Pack creado exitosamente" });
             }
@@ -87,14 +72,14 @@ namespace Aventour.WebAPI.Controllers
             }
         }
 
-        // PUT: api/PackRuta/{id} (Requiere Auth)
+        // PUT: api/v1/PackRuta/{id} (Requiere Auth)
         [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> ActualizarPack(int id, [FromBody] UpdatePackDto dto)
         {
             try
             {
-                string email = ObtenerEmailUsuario();
+                string email = ObtenerEmailUsuarioAutenticado();
                 await _packService.ActualizarPackAsync(id, email, dto);
                 return NoContent();
             }
@@ -112,14 +97,14 @@ namespace Aventour.WebAPI.Controllers
             }
         }
 
-        // DELETE: api/PackRuta/{id} (Requiere Auth)
+        // DELETE: api/v1/PackRuta/{id} (Requiere Auth)
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> EliminarPack(int id)
         {
             try
             {
-                string email = ObtenerEmailUsuario();
+                string email = ObtenerEmailUsuarioAutenticado();
                 await _packService.EliminarPackAsync(id, email);
                 return NoContent();
             }
