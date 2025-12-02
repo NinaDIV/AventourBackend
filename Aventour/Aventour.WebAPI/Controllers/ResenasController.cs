@@ -3,13 +3,12 @@ using Aventour.Application.Services.Resenas;
 using Aventour.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Aventour.WebAPI.Controllers.Base;
 
 namespace Aventour.WebAPI.Controllers
 {
     [Route("api/v1/[controller]")]
-    [ApiController]
-    public class ResenasController : ControllerBase
+    public class ResenasController : BaseAuthenticatedController
     {
         private readonly IResenaService _resenaService;
 
@@ -18,16 +17,6 @@ namespace Aventour.WebAPI.Controllers
             _resenaService = resenaService;
         }
 
-        // Método auxiliar para extraer ID del token (reutilizado de Favoritos)
-        private int ObtenerIdUsuarioAutenticado()
-        {
-            var idClaim = User.FindFirst("id")?.Value;
-            if (string.IsNullOrEmpty(idClaim)) idClaim = User.FindFirst("id_usuario")?.Value;
-            if (string.IsNullOrEmpty(idClaim)) idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (int.TryParse(idClaim, out int id)) return id;
-            throw new UnauthorizedAccessException("No se pudo identificar al usuario desde el token.");
-        }
 
         // 1. Crear Reseña
         [HttpPost]
