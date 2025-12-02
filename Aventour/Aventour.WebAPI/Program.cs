@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using Aventour.Application.DTOs;
+using Aventour.Application.Repositories;
 using Aventour.Application.Services;
 using Aventour.Application.Services.Agencias; // UsuarioService
 using Aventour.Application.Services.Destinos;
