@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Aventour.WebAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+924a3920e4ced021d30764724c72954dc62191a3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3360e8055198bffa9303247fcc6c5008407dc4d5")]
 [assembly: System.Reflection.AssemblyProductAttribute("Aventour.WebAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Aventour.WebAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
