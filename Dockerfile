@@ -2,29 +2,33 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# 1. Copiar la solución y los proyectos
-# Como el contexto será la carpeta "Aventour", copiamos directamente desde ahí
-COPY ["Aventour.sln", "."]
-COPY ["Aventour.WebAPI/Aventour.WebAPI.csproj", "Aventour.WebAPI/"]
-COPY ["Aventour.Application/Aventour.Application.csproj", "Aventour.Application/"]
-COPY ["Aventour.Domain/Aventour.Domain.csproj", "Aventour.Domain/"]
-COPY ["Aventour.Infrastructure/Aventour.Infrastructure.csproj", "Aventour.Infrastructure/"]
+# Copiar el archivo de solución y los proyectos para restaurar dependencias
+# Ajustamos las rutas basándonos en tu estructura "Aventour/..."
+COPY ["Aventour/Aventour.sln", "Aventour/"]
+COPY ["Aventour/Aventour.WebAPI/Aventour.WebAPI.csproj", "Aventour/Aventour.WebAPI/"]
+COPY ["Aventour/Aventour.Application/Aventour.Application.csproj", "Aventour/Aventour.Application/"]
+COPY ["Aventour/Aventour.Domain/Aventour.Domain.csproj", "Aventour/Aventour.Domain/"]
+COPY ["Aventour/Aventour.Infrastructure/Aventour.Infrastructure.csproj", "Aventour/Aventour.Infrastructure/"]
 
-# 2. Restaurar dependencias
-RUN dotnet restore "Aventour.sln"
+# Restaurar dependencias (esto usa la caché de Docker para ser más rápido)
+RUN dotnet restore "Aventour/Aventour.sln"
 
-# 3. Copiar todo el código fuente restante
+# Copiar el resto del código fuente
 COPY . .
 
-# 4. Publicar la aplicación
-WORKDIR "/src/Aventour.WebAPI"
+# Publicar la aplicación
+WORKDIR "/src/Aventour/Aventour.WebAPI"
 RUN dotnet publish "Aventour.WebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Etapa 2: Runtime
+# Etapa 2: Runtime (Imagen final más ligera)
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
+
+# Configurar el puerto que Render espera (8080 es el estándar)
 ENV ASPNETCORE_HTTP_PORTS=8080
 
+# Copiar los archivos publicados desde la etapa de construcción
 COPY --from=build /app/publish .
 
+# Punto de entrada
 ENTRYPOINT ["dotnet", "Aventour.WebAPI.dll"]

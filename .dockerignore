@@ -4,3 +4,5 @@
 **/obj
 **/.git
 **/.vs
+**/.vscode
+**/Dockerfile
